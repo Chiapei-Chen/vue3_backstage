@@ -23,9 +23,9 @@
 import { ref, computed, onMounted, nextTick } from 'vue';
 import { getOtp, userLogin } from '@/service/api';
 import to from 'await-to-js';
-import {userRouter}from 'vue-router';
+import { useRouter } from 'vue-router';
 
-const router=userRouter();
+const router = useRouter();
 
 const loginForm = ref({
   username: '',
@@ -43,18 +43,18 @@ const getOtpNumbers = async () => {
 };
 
 const handleSubmit = async () => {
-  const [err,res]=await to (
+  const [err, res] = await to(
     userLogin({
-      Account:loginForm.value.username,
-      Password:loginForm.value.password,
-      OTP:loginForm.value.otp
+      Account: loginForm.value.username,
+      Password: loginForm.value.password,
+      OTP: loginForm.value.otp
     })
   );
 
-  console.log('##Login:',res);
+  console.log('##Login:', res);
   if (res.status === 200) {
-    localStorage.setItem('token',res.data.Token);
-    localStorage.setItem('user',JSON.stringify(res.data.Data.Info));
+    localStorage.setItem('token', res.data.Token);
+    localStorage.setItem('user', JSON.stringify(res.data.Data.Info));
     router.push('/');
   }
 };
