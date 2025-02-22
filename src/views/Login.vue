@@ -50,10 +50,9 @@ const handleSubmit = async () => {
       OTP: loginForm.value.otp
     })
   );
-
-  console.log('##Login:', res);
+  console.log('###Login: ', res);
   if (res.status === 200) {
-    localStorage.setItem('token', res.data.Token);
+    localStorage.setItem('token', res.data.Data.Token);
     localStorage.setItem('user', JSON.stringify(res.data.Data.Info));
     router.push('/');
   }
