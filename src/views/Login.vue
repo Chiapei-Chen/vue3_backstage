@@ -27,10 +27,10 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-const loginForm = ref({
-  username: '',
-  password: '',
-  otp: ''
+const loginForm=ref({
+  username:'',
+  password:'',
+  otp:''
 });
 
 /** Get OTP */

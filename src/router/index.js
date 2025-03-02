@@ -56,4 +56,8 @@ router.beforeEach((to, from, next) => {
   }
 })
 
+router.afterEach((to)=>{
+  document.title=to.meta.title||'後台管理'
+ });
+
 export default router
