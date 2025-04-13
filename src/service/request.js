@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export function request(config) {
-  config.headers.token = !localStorage.getItem('token') ? '' : localStorage.getItem('token');
+  config.headers.token = !localStorage.getItem('token') ? '' : JSON.parse(localStorage.getItem('token')).token;
   const service = axios.create({
     headers: config.headers,
     baseURL: import.meta.env.MODE === 'production' ? import.meta.env.VITE_BASE_API : '/api',
@@ -13,8 +13,6 @@ export function request(config) {
       }
     ]
   });
-  console.log('目前 token:', localStorage.getItem('token'));
-
   const getJwtData = data => {
     for (const key in data) {
       if (data.hasOwnProperty(key)) {
@@ -69,4 +67,4 @@ export function request(config) {
   return service(config);
 }
 
-console.log(import.meta.env.MODE)
+console.log(import.meta.env.MODE);
