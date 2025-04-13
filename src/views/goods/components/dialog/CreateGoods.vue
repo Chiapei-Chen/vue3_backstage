@@ -110,10 +110,11 @@ const formModel = defineModel('formModel', {
   Methods
 ----------------------- */
 const handleCancel = () => {
-  visible.value = false;
+  emit('close');
+  // visible.value = false;
 };
 
-const fromRef = ref();
+const formRef = ref();
 
 //定義驗證邏輯
 const formRules = {
@@ -124,8 +125,8 @@ const formRules = {
 }
 
 const submitForm = async ()=> {
-  if (!fromRef.value) return;
-  await fromRef.value.validate((valid, fields) => {
+  if (!formRef.value) return;
+  await formRef.value.validate((valid, fields) => {
     if (valid) {
       // 驗證通過才發送 confirm 事件
       emit('confirm', formModel.value);

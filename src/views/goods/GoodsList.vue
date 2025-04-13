@@ -25,14 +25,19 @@
       <el-table-column prop="UnitPrice" label="價格"> </el-table-column>
     </el-table>
   </div>
-  <CreateGoods v-model="dialog.createGoods" v-model:formModel="goodsForm" />
+  <!-- 新增商品 Dialog -->
+  <CreateGoods v-model="dialog.createGoods"
+   v-model:formModel="goodsForm" 
+   @confirm="handleCreateGoods"
+    @close="resetDialog" />
 </template>
 
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue';
 import { useGoodsList } from './composables';
 import CreateGoods from './components/dialog/CreateGoods.vue';
-import { updateGoods } from '@/service/api';
+import { addGoods,updateGoods } from '@/service/api';
+import { ElMessage } from 'element-plus';
 
 const { searchFilter, tableData, tableLoading, goodsForm, goodsTypeList, getGoodsListRequest, getGoodsTypeList } =
   useGoodsList();
@@ -41,6 +46,36 @@ const dialog = ref({
   createGoods: false,
   updateGoods: false
 });
+
+const handleCreateGoods = async (formData) => {
+  try {
+    const res = await addGoods(formData);
+    if (res.data.Code === 200) {
+      console.log("新增商品成功:", res.data);
+      ElMessage.success('新增成功');
+      dialog.value.createGoods = false;
+      getGoodsListRequest({}, false); // 重新載入商品列表
+    } else {
+      ElMessage.error(res.data.Message || '新增失敗');
+    }
+  } catch (error) {
+    console.error('新增商品發生錯誤:', error);
+    ElMessage.error('系統錯誤，請稍後再試');
+  }
+};
+const resetDialog = () => {
+  dialog.value.createGoods = false;
+  goodsForm.value = {
+    Name: '',
+    Show: true,
+    GoodsTypeID: 1,
+    SpecsAllowance: 2,
+    GoodsSpecs: [{ Specs: '' }],
+    UnitPrice: 0,
+    ImagesIdnet: '',
+    Description: ''
+  };
+};
 
 onMounted(async () => {
   await nextTick();
