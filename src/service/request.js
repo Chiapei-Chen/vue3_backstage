@@ -1,7 +1,13 @@
 import axios from 'axios';
 
 export function request(config) {
-  config.headers.token = !localStorage.getItem('token') ? '' : JSON.parse(localStorage.getItem('token')).token;
+  //config.headers.token = !localStorage.getItem('token') ? '' : JSON.parse(localStorage.getItem('token')).token;
+  const token = localStorage.getItem('token');
+  if (token && token !== 'undefined') {
+    config.headers.token = token;
+  } else {
+    console.warn('token不存在或為undefined');
+  }
   const service = axios.create({
     headers: config.headers,
     baseURL: import.meta.env.MODE === 'production' ? import.meta.env.VITE_BASE_API : '/api',

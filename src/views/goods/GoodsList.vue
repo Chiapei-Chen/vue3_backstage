@@ -11,15 +11,15 @@
       </div>
       <el-button type="primary" icon="Search" @click="getGoodsListRequest(searchFilter, false)">Search</el-button>
     </div>
-    <el-button type="primary" plain icon="Plus" @click="dialog.createGoods = true">New Goods</el-button>
+    <el-button type="primary" plain icon="Plus" @click="dialog.createGoods = true">新增產品</el-button>
   </div>
   <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
     <el-table :data="tableData" flexible stripe style="width: 100%" v-loading="tableLoading">
       <el-table-column prop="ID" label="ID" width="100"> </el-table-column>
-      <el-table-column prop="Name" label="商品名稱"> </el-table-column>
+      <el-table-column prop="Name" label="商品名稱" > </el-table-column>
       <el-table-column label="商品圖片">
         <template #default="{ row }">
-          <img :src="row.ImageUrls[0].Url" alt="商品圖片" class="w-[120px] aspect-auto-[1]" />
+          <img :src="row.ImagesIdnet[0].Url" alt="商品圖片" class="w-[120px] aspect-auto-[1]" />
         </template>
       </el-table-column>
       <el-table-column prop="UnitPrice" label="價格"> </el-table-column>
