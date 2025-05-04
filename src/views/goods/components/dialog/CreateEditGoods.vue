@@ -1,5 +1,6 @@
 <template>
-  <el-dialog v-model="visible" :title="title" :width="width" @close="emit('close')">
+  <!-- <el-dialog v-model="visible" :title="title" :width="width" @close="emit('close')"> -->
+  <el-dialog v-model="visible" :title="isEdit ? '編輯商品' : '新增商品'" :width="width" @close="emit('close')">
     <el-form ref="formRef" :model="formModel" :rules="formRules" label-width="120px">
       <el-form-item label="商品名稱" prop="Name">
         <el-input v-model="formModel.Name" placeholder="請輸入商品名稱" />
@@ -48,7 +49,7 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="handleCancel">取消</el-button>
-        <el-button type="primary" @click="submitForm">新增</el-button>
+        <el-button type="primary" @click="submitForm">{{isEdit?'編輯':'新增'}}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -76,21 +77,24 @@ defineProps({
   labelPosition: {
     type: String,
     default: 'left'
+  },
+  isEdit: {
+    type: Boolean,
+    default: false
   }
 });
 
 /* ----------------------
-  Emits
+  Emits 元件聲明事件
 ----------------------- */
 const emit = defineEmits(['close', 'confirm']);
 
 /* ----------------------
   Models
 ----------------------- */
-
-// v-model for dialog visibility
+// 控制是否顯示
 const visible = defineModel();
-// v-model for form data
+// 表單初始化
 const formModel = defineModel('formModel', {
   default: () => ({
     Name: '',               // 商品名稱
@@ -111,7 +115,6 @@ const formModel = defineModel('formModel', {
 ----------------------- */
 const handleCancel = () => {
   emit('close');
-  // visible.value = false;
 };
 
 const formRef = ref();
@@ -124,7 +127,7 @@ const formRules = {
   ImagesIdnet: [{ required: true, message: '請輸入圖片識別碼', trigger: 'blur' }],
 }
 
-const submitForm = async ()=> {
+const submitForm = async () => {
   if (!formRef.value) return;
   await formRef.value.validate((valid, fields) => {
     if (valid) {
