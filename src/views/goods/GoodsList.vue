@@ -73,7 +73,7 @@ const handleSaveGoods = async (formData) => {
     if (res.data.Code === 200) {
       ElMessage.success(dialog.value.IsEditMode ? '更新成功' : '新增成功');
       dialog.value.goodsDialogVisible = false;
-      dialog.value.IsEditMode = false; //重新設定為新增
+      dialog.value.IsEditMode = false;
       getGoodsListRequest({}, false);    // 重新載入列表
     } else {
       ElMessage.error(res.data.Message || '操作失敗');
