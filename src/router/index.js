@@ -48,6 +48,18 @@ const router = createRouter({
                 header: 'Goods List'
               }
             }
+          ],
+          children: [
+            {
+              path: 'goods-type-list',
+              name: 'GoodsTypeList',
+              component: () => import('@/views/goods/GoodsTypeList.vue'),
+              meta: {
+                requiresAuth: true,
+                title: 'Goods Type List',
+                header: 'Goods Type List'
+              }
+            }
           ]
         },
         // 其他後台管理系統相關頁面都會放在這
