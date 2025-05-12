@@ -95,12 +95,12 @@ export const removeGoodsSpec = data =>
   });
 
 /* Get goods type list */
-export const getGoodsType = data =>
+export const getGoodsType = params =>
   request({
     url: '/admin/goods/goodstype/r',
     method: 'get',
     headers: { 'Content-Type': 'text/plain' },
-    data
+    params
   });
 
 /* add goods type */
