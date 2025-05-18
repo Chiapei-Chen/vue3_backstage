@@ -6,6 +6,30 @@ export function useGoodsTypeList() {
   const tableData = ref([]);
   const tableLoading = ref(false);
 
+  // 搜尋
+  const searchFilter = ref({
+    ID: '',
+    Name: ''
+  });
+
+  // 送到後端
+  const searchForm = ref({
+    ID: 0,
+    GoodsName: ''
+  });
+
+  const pagination = ref({
+    currentPage: 0,
+    pageSize: 20,
+    total: 0
+  });
+
+  const goodsTypeForm = ref({
+    ID: null,
+    Show: true,
+    Name: ''
+  });
+
   //獲取商品分類列表
   const getGoodsTypeTableList = async () => {
     tableLoading.value = true;
@@ -20,8 +44,17 @@ export function useGoodsTypeList() {
     tableData.value = res.data.Data;
   };
   return {
+    // 列表
     tableData,
     tableLoading,
-    getGoodsTypeTableList
+    // 搜尋
+    searchFilter,
+    searchForm,
+    // 分頁
+    pagination,
+    // 編輯表單
+    goodsTypeForm,
+    // 取得列表函式
+    getGoodsTypeTableList,
   };
 }
