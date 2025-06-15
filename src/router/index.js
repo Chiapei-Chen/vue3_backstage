@@ -27,6 +27,41 @@ const router = createRouter({
         requiresAuth: true
       },
       children: [
+        {
+          path: '/goods',
+          name: 'Goods',
+          component: () => import('@/views/goods/index.vue'),
+          redirect: { name: 'GoodsList' },
+          meta: {
+            requiresAuth: true,
+            title: 'Goods',
+            header: 'Goods'
+          },
+          children: [
+            {
+              path: 'goods-list',
+              name: 'GoodsList',
+              component: () => import('@/views/goods/GoodsList.vue'),
+              meta: {
+                requiresAuth: true,
+                title: 'Goods List',
+                header: 'Goods List'
+              }
+            }
+          ],
+          children: [
+            {
+              path: 'goods-type-list',
+              name: 'GoodsTypeList',
+              component: () => import('@/views/goods/GoodsTypeList.vue'),
+              meta: {
+                requiresAuth: true,
+                title: 'Goods Type List',
+                header: 'Goods Type List'
+              }
+            }
+          ]
+        },
         // 其他後台管理系統相關頁面都會放在這
       ]
     },
