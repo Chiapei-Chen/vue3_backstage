@@ -1,6 +1,6 @@
 <template>
     <div class="p-3 bg-white rounded">
-        <el-button type="primary" plain icon="Plus" @click="openCreateDialog">新增商品分類</el-button>
+        <el-button type="primary" plain icon="Plus" @click="dialog.goodsTypeDialogVisible=true">新增商品分類</el-button>
 
         <el-table :data="tableData" stripe v-loading="tableLoading" class="my-3">
             <el-table-column prop="ID" label="ID" width="80" />
@@ -12,14 +12,16 @@
             </el-table-column>
         </el-table>
     </div>
-    <!-- 彈跳視窗 !!-->
-    <CreateEditGoodsType v-model:visible="dialog.goodsTypeDialogVisible" v-model:formModel="goodsTypeForm"
-        :isEdit="dialog.IsEditMode" @confirm="handleSaveGoodsType" @close="resetDialog" />
+    <!-- 彈跳視窗 -->
+    <CreateEditGoodsType v-model="dialog.goodsTypeDialogVisible" 
+    v-model:formModel="goodsTypeForm"
+    :isEdit="dialog.IsEditMode"
+     @confirm="handleSaveGoodsType" @close="resetDialog" />
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, nextTick } from 'vue';
-import CreateEditGoodsType from '@/views/goods/components/dialog/CreateEditGoodsType.vue';
+import CreateEditGoodsType from './components/dialog/CreateEditGoodsType.vue';
 import { useGoodsTypeList } from '@/views/goods/composables/useGoodsTypeList';
 import { addGoodsType, updateGoodsType } from '@/service/api';
 import { ElMessage } from 'element-plus';
@@ -35,19 +37,6 @@ const dialog = ref({
     goodsTypeDialogVisible: false,
     IsEditMode: false,
 });
-
-onMounted(async () => {
-    await nextTick();
-    getGoodsTypeTableList();
-});
-
-const openCreateDialog = () => {
-    console.log('openCreateDialog');
-    goodsTypeForm.value = { ID: null, Name: '', Show: true };
-    dialog.value.goodsTypeDialogVisible = true;
-    console.log('👀 dialog visible =', dialog.value.goodsTypeDialogVisible);
-    dialog.value.IsEditMode = false;
-};
 
 const openEditDialog = (row: any) => {
     goodsTypeForm.value = { ...row };
@@ -68,8 +57,8 @@ const handleSaveGoodsType = async (formData: any) => {
             ElMessage.error(res.data.Message || '操作失敗');
         }
     } catch (error) {
-        console.error(error);
-        ElMessage.error('系統錯誤');
+       console.error('操作商品發生錯誤:', error);
+     ElMessage.error('系統錯誤，請稍後再試');
     }
 };
 
@@ -78,4 +67,9 @@ const resetDialog = () => {
     dialog.value.IsEditMode = false;
     goodsTypeForm.value = { ID: null, Name: '', Show: true };
 };
+
+onMounted(async () => {
+    await nextTick();
+    getGoodsTypeTableList();
+});
 </script>

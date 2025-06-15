@@ -97,16 +97,16 @@ const visible = defineModel();
 // 表單初始化
 const formModel = defineModel('formModel', {
   default: () => ({
-    Name: '',               // 商品名稱
-    Show: true,             // 是否顯示
-    GoodsTypeID: 1,         // 商品分類
-    SpecsAllowance: 2,      // 是否允許規格
-    GoodsSpecs: [           // 商品規格
+    Name: '',   
+    Show: true,            
+    GoodsTypeID: 1,      
+    SpecsAllowance: 2,  
+    GoodsSpecs: [         
       { Specs: '' }
     ],
-    UnitPrice: 0,           // 價格
-    ImagesIdnet: '',        // 圖片識別碼
-    Description: ''         // 說明
+    UnitPrice: 0,        
+    ImagesIdnet: '',      
+    Description: ''     
   })
 });
 
@@ -116,8 +116,6 @@ const formModel = defineModel('formModel', {
 const handleCancel = () => {
   emit('close');
 };
-
-const formRef = ref();
 
 //定義驗證邏輯
 const formRules = {
