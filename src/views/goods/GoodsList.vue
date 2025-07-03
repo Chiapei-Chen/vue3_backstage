@@ -9,7 +9,7 @@
           <el-option v-for="item in goodsTypeList" :key="item.ID" :label="item.Name" :value="item.ID" />
         </el-select>
       </div>
-      <el-button type="primary" icon="Search" @click="getGoodsListRequest(searchFilter, false)">Search</el-button>
+      <el-button type="primary" icon="Search" @click="getGoodsListRequest(searchFilter, false)">搜尋</el-button>
     </div>
     <el-button type="primary" plain icon="Plus" @click="dialog.goodsDialogVisible = true">新增商品</el-button>
   </div>
@@ -18,11 +18,7 @@
       <el-table-column prop="ID" label="ID" width="100"> </el-table-column>
       <el-table-column prop="GoodsTypeID" label="商品分類"></el-table-column>
       <el-table-column prop="Name" label="商品名稱"> </el-table-column>
-      <!-- <el-table-column label="商品圖片">
-        <template #default="{ row }">
-          <img :src="row.ImagesIdnet[0].Url" alt="商品圖片" class="w-[120px] aspect-auto-[1]" />
-        </template>
-</el-table-column> -->
+
       <el-table-column prop="UnitPrice" label="價格"> </el-table-column>
       <el-table-column label="操作" width="150">
         <template #default="{ row }">
@@ -73,7 +69,7 @@ const handleSaveGoods = async (formData) => {
     if (res.data.Code === 200) {
       ElMessage.success(dialog.value.IsEditMode ? '更新成功' : '新增成功');
       dialog.value.goodsDialogVisible = false;
-      dialog.value.IsEditMode = false; //重新設定為新增
+      dialog.value.IsEditMode = false;
       getGoodsListRequest({}, false);    // 重新載入列表
     } else {
       ElMessage.error(res.data.Message || '操作失敗');
@@ -104,7 +100,6 @@ const resetDialog = () => {
 onMounted(async () => {
   await nextTick();
   getGoodsTypeList();
-  // 初始化不需要帶額外搜尋條件
   getGoodsListRequest({}, false);
 });
 </script>
