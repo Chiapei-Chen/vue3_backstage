@@ -9,7 +9,7 @@
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button>取消</el-button>
+        <el-button @click="handleCancel">取消</el-button>
         <el-button type="primary" @click="submitForm">{{ isEdit ? '編輯' : '新增' }}</el-button>
       </div>
     </template>
