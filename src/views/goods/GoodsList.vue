@@ -2,10 +2,10 @@
   <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
     <div class="flex items-center gap-2">
       <div class="w-[140px]">
-        <el-input v-model="searchFilter.ID" placeholder="Search By ID" clearable />
+        <el-input v-model="searchFilter.ID" placeholder="搜尋商品ID" clearable />
       </div>
       <div class="w-[180px]">
-        <el-select v-model="searchFilter.GoodsType" placeholder="Select Goods Type" clearable>
+        <el-select v-model="searchFilter.GoodsType" placeholder="選擇分類" clearable>
           <el-option v-for="item in goodsTypeList" :key="item.ID" :label="item.Name" :value="item.ID" />
         </el-select>
       </div>
@@ -16,7 +16,13 @@
   <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
     <el-table :data="tableData" flexible stripe style="width: 100%" v-loading="tableLoading">
       <el-table-column prop="ID" label="ID" width="100"> </el-table-column>
-      <el-table-column prop="GoodsTypeID" label="商品分類"></el-table-column>
+      <!-- <el-table-column prop="GoodsTypeID" label="商品分類"></el-table-column> -->
+      <el-table-column label="商品分類">
+        <template #default="{ row }">
+          {{ getGoodsTypeName(row.GoodsTypeID) }}
+        </template>
+      </el-table-column>
+
       <el-table-column prop="Name" label="商品名稱"> </el-table-column>
 
       <el-table-column prop="UnitPrice" label="價格"> </el-table-column>
@@ -30,7 +36,7 @@
   </div>
   <!-- 新增商品&編輯商品 Dialog -->
   <CreateEditGoods v-model="dialog.goodsDialogVisible" v-model:formModel="goodsForm" :isEdit="dialog.IsEditMode"
-    @confirm="handleSaveGoods" @close="resetDialog" />
+    @confirm="handleSaveGoods" @close="resetDialog" :goodsTypeList="goodsTypeList" />
 </template>
 
 <script setup>
@@ -40,7 +46,7 @@ import CreateEditGoods from './components/dialog/CreateEditGoods.vue';
 import { addGoods, updateGoods } from '@/service/api';
 import { ElMessage } from 'element-plus';
 
-const { searchFilter, tableData, tableLoading, goodsForm, goodsTypeList, getGoodsListRequest, getGoodsTypeList } =
+const { searchFilter, tableData, tableLoading, goodsForm, goodsTypeList, getGoodsTypeName, getGoodsListRequest, getGoodsTypeList } =
   useGoodsList();
 
 // 彈跳視窗

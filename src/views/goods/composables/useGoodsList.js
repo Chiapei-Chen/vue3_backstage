@@ -57,6 +57,11 @@ export function useGoodsList() {
     console.log('### GOODS TYPE RES: ', goodsTypeList.value);
   };
 
+
+  const getGoodsTypeName = (typeId) => {
+    const match = goodsTypeList.value.find(item => item.ID == typeId);
+    return match.Name;
+  }
   /** Goods list request */
 
   const getGoodsListRequest = async (postData, useLastSearchForm = false) => {
@@ -95,6 +100,7 @@ export function useGoodsList() {
     goodsForm,
     goodsTypeList,
     getGoodsListRequest,
-    getGoodsTypeList
+    getGoodsTypeList,
+    getGoodsTypeName
   };
 }
