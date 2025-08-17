@@ -1,5 +1,6 @@
 <template>
   <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
+    <!--搜尋-->
     <div class="flex items-center gap-2">
       <div class="w-[140px]">
         <el-input v-model="searchFilter.ID" placeholder="搜尋商品ID" clearable />
@@ -11,8 +12,9 @@
       </div>
       <el-button type="primary" icon="Search" @click="getGoodsListRequest(searchFilter, false)">搜尋</el-button>
     </div>
-    <el-button type="primary" plain icon="Plus" @click="dialog.goodsDialogVisible = true">新增商品</el-button>
+    <el-button class="btn--create" plain icon="Plus" @click="dialog.goodsDialogVisible = true">新增商品</el-button>
   </div>
+  <!--表格內容-->
   <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
     <el-table :data="tableData" flexible stripe style="width: 100%" v-loading="tableLoading">
       <el-table-column prop="ID" label="ID" width="100"> </el-table-column>
@@ -24,7 +26,6 @@
       </el-table-column>
 
       <el-table-column prop="Name" label="商品名稱"> </el-table-column>
-
       <el-table-column prop="UnitPrice" label="價格"> </el-table-column>
       <el-table-column label="操作" width="150">
         <template #default="{ row }">
