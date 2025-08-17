@@ -1,0 +1,47 @@
+:root {
+    /** Brand Blue  */
+    --color-brand-blue-50: oklch(97% 0.014 254.604);
+    --color-brand-blue-100: oklch(78.946% 0.05874 254.202);
+    --color-brand-blue-500: oklch(50.11% 0.13141 258.472);
+    --color-brand-blue-600: oklch(34.57% 0.13514 262.822);
+
+    /* Gray */
+    --color-gray-50: oklch(98.5% 0.002 247.839);
+    --color-gray-500: oklch(55.1% 0.027 264.364);
+    --color-gray-600: oklch(44.6% 0.03 256.802);
+
+    --color-black: #000000;
+
+    /* Status */
+    --color-success: #16a34a;
+    --color-warning: #eab308;
+    --color-error: #dc2626;
+
+    /* Create */
+    --btn-create-bg: var(--color-success);
+    --btn-create-text: #fff;
+    --btn-create-hover: oklch(46% 0.14 145);
+
+    /* Read */
+    --btn-read-bg: oklch(98% 0 260);
+    --btn-read-text: var(--color-brand-blue-600);
+    --btn-read-border: var(--color-gray-500);
+    --btn-read-hover: oklch(95% 0.01 260);
+
+    /* Update */
+    --btn-update-bg: var(--color-warning);
+    --btn-update-text: #111;
+    --btn-update-hover: oklch(62% 0.16 85);
+
+    /* Delete */
+    --btn-delete-bg: var(--color-error);
+    --btn-delete-text: #fff;
+    --btn-delete-hover: oklch(50% 0.19 25);
+
+    /* 共用 */
+    --btn-radius: 0.5rem;
+    --btn-gap: 0.5rem;
+    --btn-padding-x: 0.75rem;
+    --btn-padding-y: 0.5rem;
+    --btn-focus-ring: oklch(75% 0.12 250 / 60%);
+}
