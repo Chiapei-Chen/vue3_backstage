@@ -1,0 +1,10 @@
+/** Button **/
+@layer utilities{
+    .btn-add{
+        background-color: var( --color-btn-primary-bg);
+    }
+
+     .btn-edit{
+        background-color: bg-yellow-500;
+    }
+}

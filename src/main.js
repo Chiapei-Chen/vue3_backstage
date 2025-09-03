@@ -2,6 +2,7 @@ import '@/styles/tw.css'
 import '@/styles/style.scss'
 import 'element-plus/dist/index.css'
 import 'virtual:svg-icons-register'
+import '@/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

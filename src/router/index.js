@@ -60,6 +60,16 @@ const router = createRouter({
             }
           ],
         },
+        {
+          path:'/admin',
+          name:'Admin',
+          component:()=>import('@/views/admin/Admin.vue'),
+          meta:{
+            requiresAuth:true,
+            title:'Admin',
+            header:'Admin'
+          }
+        }
         // 其他後台管理系統相關頁面都會放在這
       ]
     },
