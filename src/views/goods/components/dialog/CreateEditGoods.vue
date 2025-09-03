@@ -1,5 +1,4 @@
 <template>
-  <!-- <el-dialog v-model="visible" :title="title" :width="width" @close="emit('close')"> -->
   <el-dialog v-model="visible" :title="isEdit ? '編輯商品' : '新增商品'" :width="width" @close="emit('close')">
     <el-form ref="formRef" :model="formModel" :rules="formRules" label-width="120px">
       <el-form-item label="商品名稱" prop="Name">
@@ -13,9 +12,15 @@
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item label="商品分類 ID" prop="GoodsTypeID">
-        <el-input-number v-model="formModel.GoodsTypeID" :min="1" />
+      <el-form-item label="商品分類" prop="GoodsTypeID">
+        <el-select v-model="formModel.GoodsTypeID">請選擇商品分類
+          <!-- <el-option :label="請選擇"  :value="0">請選擇商品分類</el-option> -->
+          <el-option v-for="item in goodsTypeList" :key="item.ID" :label="item.Name" :value="item.ID"></el-option>
+        </el-select>
       </el-form-item>
+      <!-- <el-form-item label="商品分類 ID" prop="GoodsTypeID">
+        <el-input-number v-model="formModel.GoodsTypeID" :min="1" />
+      </el-form-item> -->
 
       <el-form-item label="是否允許規格" prop="SpecsAllowance">
         <el-radio-group v-model="formModel.SpecsAllowance">
@@ -49,7 +54,8 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="handleCancel">取消</el-button>
-        <el-button type="info" @click="submitForm">{{isEdit?'編輯':'新增'}}</el-button>
+        <el-button :class="isEdit ? 'btn--update' : 'btn--create'" @click="submitForm">{{ isEdit ? '編輯' : '新增'
+          }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -57,6 +63,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import GoodsTypeList from '../../GoodsTypeList.vue';
 
 /* ----------------------
   Props
@@ -81,6 +88,10 @@ defineProps({
   isEdit: {
     type: Boolean,
     default: false
+  },
+  goodsTypeList: {
+    type: Array,
+    default: () => []
   }
 });
 
@@ -97,16 +108,16 @@ const visible = defineModel();
 // 表單初始化
 const formModel = defineModel('formModel', {
   default: () => ({
-    Name: '',   
-    Show: true,            
-    GoodsTypeID: 1,      
-    SpecsAllowance: 2,  
-    GoodsSpecs: [         
+    Name: '',
+    Show: true,
+    GoodsTypeID: null,
+    SpecsAllowance: 2,
+    GoodsSpecs: [
       { Specs: '' }
     ],
-    UnitPrice: 0,        
-    ImagesIdnet: '',      
-    Description: ''     
+    UnitPrice: 0,
+    ImagesIdnet: '',
+    Description: ''
   })
 });
 
@@ -124,6 +135,8 @@ const formRules = {
   UnitPrice: [{ required: true, message: '請輸入價格', trigger: 'blur' }],
   ImagesIdnet: [{ required: true, message: '請輸入圖片識別碼', trigger: 'blur' }],
 }
+
+const formRef = ref();
 
 const submitForm = async () => {
   if (!formRef.value) return;
