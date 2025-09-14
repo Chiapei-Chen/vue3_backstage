@@ -16,6 +16,7 @@
             <el-table-column prop="Name" label="姓名"></el-table-column>
             <el-table-column prop="Email" label="信箱"></el-table-column>
             <el-table-column prop="Phone" label="電話"></el-table-column>
+
             <el-table-column label="操作">
                 <template #default="{ row }">
                     <el-button type="primary" size="small" @click="openEditDialog(row)">編輯</el-button>
@@ -23,14 +24,17 @@
             </el-table-column>
         </el-table>
     </div>
+    <Permission v-model="dialog.dialogVisible" :isEdit="dialog.isEditModel" ></Permission>
 </template>
 
 <script setup>
 import { ref, onMounted, nextTick } from 'vue';
+import Permission from "./components/Permission.vue"
 import { useAdminList } from './composables/useAdminList';
-import { fa } from 'element-plus/es/locale';
+import { usePermission } from './composables/usePermission';
 
 const { tableData, tableLoading, adminForm, getAdminRequest } = useAdminList();
+const { getPermissionRequest, } = usePermission();
 
 const dialog = ref({
     dialogVisible: false,
@@ -43,6 +47,9 @@ const openEditDialog = (row) => {
     };
     dialog.value.dialogVisible = true;
     dialog.value.isEditModel = true;
+
+    getPermissionRequest(row.ID);
+    console.log("payload", typeof (row.ID));
 }
 
 onMounted(async () => {
