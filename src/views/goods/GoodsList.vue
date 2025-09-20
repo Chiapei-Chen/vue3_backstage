@@ -91,7 +91,8 @@ const resetDialog = () => {
   dialog.value.goodsDialogVisible = false;
   dialog.value.IsEditMode = false;
   goodsForm.value = {
-    Name: '',
+    Name: 
+    '',
     Show: true,
     GoodsTypeID: 1,
     SpecsAllowance: 2,

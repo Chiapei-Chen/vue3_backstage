@@ -30,33 +30,20 @@ const { permissionTableLoading, permissionTableData, getPermissionRequest } = us
 /* ----------------------
   Props
 ----------------------- */
-defineProps({
-    width: {
-        type: [String, Number],
-        default: 500
-    },
-    adminPermissionList: {
-        type: Array,
-        default: () => []
-    },
-    isEdit: {
-        type: Boolean,
-        default: false
-    },
-});
+const props = defineProps({
+  width: { type: [String, Number], default: 500 },
+  // 預期是一個「鍵是權限名稱、值是物件」的字典
+  // 例如：{ admin_manage_add: { Activity: true }, ... }
+  data: { type: Object, default: () => ({}) },
+  isEdit: { type: Boolean, default: false },
+})
 
 const rows = computed(() => {
-    const raw = permissionTableData.value
-    const dict =
-        raw?.Data?.Permission ??
-        222// 取不到就給空物件，避免 .map crash
-
-    // 物件展平成陣列
-    return Object.entries(dict).map(([name, v]) => ({
-        name,
-        activity: !!v?.Activity,
-        updating: !!v?.updating
-    }))
+  const dict = props.data ?? {}
+  return Object.entries(dict).map(([key, val]) => ({
+    name: key,
+    activity: !!val.Activity,
+  }))
 })
 
 console.log(rows);
