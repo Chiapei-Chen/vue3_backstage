@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-model="visible" @close="handleCancel" 
-  :title="isEdit ? '編輯分類' : '新增分類'" width="400px">
-    <el-form ref="formRef" :model="formModel" :rules="formRules" label-width="80px">
+  :title="isEdit ? '編輯分類' : '新增分類'" :width="width">
+    <el-form ref="formRef" :model="formModel" :rules="formRules" :label-width="labelWidth">
       <el-form-item label="分類名稱" prop="Name">
         <el-input v-model="formModel.Name" placeholder="請輸入分類名稱" />
       </el-form-item>
@@ -9,7 +9,7 @@
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button>取消</el-button>
+        <el-button @close="handleCancel">取消</el-button>
         <el-button type="primary" @click="submitForm">{{ isEdit ? '編輯' : '新增' }}</el-button>
       </div>
     </template>

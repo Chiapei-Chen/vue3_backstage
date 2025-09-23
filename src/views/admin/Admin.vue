@@ -15,9 +15,7 @@
             <el-table-column prop="Account" label="帳號"></el-table-column>
             <el-table-column prop="Password" label="密碼"></el-table-column>
             <el-table-column prop="Name" label="姓名"></el-table-column>
-            <el-table-column prop="Email" label="信箱">
-                
-            </el-table-column>
+            <el-table-column prop="Email" label="信箱"> </el-table-column>
             <el-table-column prop="Phone" label="電話"></el-table-column>
 
             <el-table-column label="操作">
@@ -27,7 +25,7 @@
             </el-table-column>
         </el-table>
     </div>
-    <Permission v-model="dialog.dialogVisible" :isEdit="dialog.isEditModel" :data="permissionTableData"></Permission>
+    <!-- <Permission v-model="dialog.dialogVisible" :isEdit="dialog.isEditModel" :data="permissionTableData"></Permission> -->
 </template>
 
 <script setup>

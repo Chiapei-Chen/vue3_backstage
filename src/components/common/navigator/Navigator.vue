@@ -86,7 +86,7 @@ const menuItems = reactive([
     children:[
       {
         title:'管理員列表',
-        path:'/admin/admin'
+        path:'/admin'
       }
     ]
   }
