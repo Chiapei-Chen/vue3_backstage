@@ -25,7 +25,7 @@
             </el-table-column>
         </el-table>
     </div>
-    <!-- <Permission v-model="dialog.dialogVisible" :isEdit="dialog.isEditModel" :data="permissionTableData"></Permission> -->
+    <Permission v-model="dialog.dialogVisible" :isEdit="dialog.isEditModel" :permissionTableData="permissionTableData"></Permission>
 </template>
 
 <script setup>
@@ -51,7 +51,7 @@ const openEditDialog = (row) => {
 
     getPermissionRequest(row.ID)
 }
-
+console.log("per",permissionTableData??"a");
 onMounted(async () => {
     await nextTick();
     getAdminRequest();

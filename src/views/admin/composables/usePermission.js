@@ -20,14 +20,14 @@ export function usePermission() {
             }
             const responseData = await getAdminPermissions(requestData)
             // 只接受陣列；不是就給空陣列
-            const raw = responseData?.data
+            const raw = responseData?.data.Data.Permission;
             permissionTableData.value = Array.isArray(raw)
                 ? raw
                 : Array.isArray(raw?.items)
                     ? raw.items
-                    : []
-
-                    console.log(raw);
+                    : {}
+console.log(permissionTableData.value,"pertable");
+                    console.log(raw,"rwqa");
         } finally {
             permissionTableLoading.value = false
         }
