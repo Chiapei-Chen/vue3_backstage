@@ -53,8 +53,8 @@
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="handleCancel">取消</el-button>
-        <el-button :class="isEdit ? 'btn--update' : 'btn--create'" @click="submitForm">{{ isEdit ? '編輯' : '新增'
+        <el-button @click="clickCancel">取消</el-button>
+        <el-button :class="isEdit ? 'btn--update' : 'btn--create'" @click="clickSubmit">{{ isEdit ? '編輯' : '新增'
           }}</el-button>
       </div>
     </template>
@@ -124,10 +124,6 @@ const formModel = defineModel('formModel', {
 /* ----------------------
   Methods
 ----------------------- */
-const handleCancel = () => {
-  emit('close');
-};
-
 //定義驗證邏輯
 const formRules = {
   Name: [{ required: true, message: '請輸入商品名稱', trigger: 'blur' }],
@@ -136,9 +132,13 @@ const formRules = {
   ImagesIdnet: [{ required: true, message: '請輸入圖片識別碼', trigger: 'blur' }],
 }
 
-const formRef = ref();
+/** 點擊【取消】 */
+const clickCancel = () => {
+  emit('close');
+};
 
-const submitForm = async () => {
+/** 點擊【提交】 */
+const clickSubmit = async () => {
   if (!formRef.value) return;
   await formRef.value.validate((valid, fields) => {
     if (valid) {
@@ -149,6 +149,10 @@ const submitForm = async () => {
     }
   });
 };
+
+
+const formRef = ref();
+
 
 const addSpec = () => {
   formModel.value.GoodsSpecs.push({ Specs: '' })
