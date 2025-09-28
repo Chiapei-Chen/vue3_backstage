@@ -7,7 +7,7 @@
             </div>
             <el-button type="warning" icon="Search" @click="">搜尋</el-button>
         </div>
-        <el-button type="primary" icon="Plus" @click="dialog.dialogVisible=true">新增管理員</el-button>
+        <el-button type="primary" icon="Plus" @click="openAddDialog">新增管理員</el-button>
     </div>
     <!--表格內容-->
     <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
@@ -25,33 +25,88 @@
             </el-table-column>
         </el-table>
     </div>
-    <Permission v-model="dialog.dialogVisible" :isEdit="dialog.isEditModel" :permissionTableData="permissionTableData"></Permission>
+    <Permission v-model="dialog.dialogVisible" v-model:formModel="adminForm" :isEdit="dialog.isEditMode"
+        :permissionTableData="permissionTableData" @confirm="clickSubmit" @close="handleClose" />
 </template>
 
 <script setup>
 import { ref, onMounted, nextTick } from 'vue';
+import { ElMessage } from 'element-plus';
 import Permission from "./components/Permission.vue"
 import { useAdminList } from './composables/useAdminList';
 import { usePermission } from './composables/usePermission';
+import { addAdminMembers, updateAdminMembers, updateAdminPermissions } from '@/service/api';
 
 const { tableData, tableLoading, adminForm, getAdminRequest } = useAdminList();
 const { getPermissionRequest, permissionTableData } = usePermission();
 
+/** 彈跳視窗 */
 const dialog = ref({
     dialogVisible: false,
-    isEditModel: false
+    isEditMode: false,
 });
 
+/**打開【新增】彈跳視窗 */
+const openAddDialog = () => {
+    adminForm.value = {
+        ID: null,
+        Account: "",
+        Password: "",
+        Name: "",
+        Email: "",
+        Phone: "",
+    };
+    dialog.value.dialogVisible = true;
+    dialog.value.isEditMode = false;
+}
+/**打開【編輯】彈跳視窗 */
 const openEditDialog = (row) => {
     adminForm.value = {
         ...row,
     };
     dialog.value.dialogVisible = true;
-    dialog.value.isEditModel = true;
+    dialog.value.isEditMode = true;
 
     getPermissionRequest(row.ID)
+
 }
-console.log("per",permissionTableData??"a");
+
+/** 資料提交 */
+const clickSubmit = async (formData) => {
+    const permissionData = permissionTableData.value;
+    const personalData = adminForm.value;
+    console.log(permissionData, personalData)
+
+    try {
+        if (dialog.value.isEditMode) {
+            // 編輯模式：更新權限 + 更新個人資料
+            const permissionResponse = await updateAdminPermissions(permissionData);
+            if (permissionResponse.Code != 200) {
+                ElMessage.error('權限操作失敗，請稍後再試');
+            }
+
+            const memberRsponse = await updateAdminMembers(personalData);
+            if (memberRsponse.Code != 200) {
+                ElMessage.error('個人資料操作失敗，請稍後再試');
+            }
+        } else {
+            // 新增模式：新增個人資料 + 新增權限
+            const permissionResponse = await updateAdminPermissions(permissionData);
+            if (permissionResponse.Code != 200) {
+                ElMessage.error('權限操作失敗，請稍後再試');
+            }
+            const memberRsponse = await addAdminMembers(personalData);
+            if (memberRsponse.Code != 200) {
+                ElMessage.error('個人資料操作失敗，請稍後再試');
+            }
+        }
+
+    } catch (error) {
+        console.error('操作發生錯誤:', error);
+        ElMessage.error('系統錯誤，請稍後再試');
+    }
+};
+
 onMounted(async () => {
     await nextTick();
     getAdminRequest();

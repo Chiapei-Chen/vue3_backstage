@@ -3,7 +3,7 @@ import to from 'await-to-js';
 import { getAdminPermissions } from '@/service/api';
 
 export function usePermission() {
-    const permissionTableData = ref([]);
+    const permissionTableData = ref({});
     const permissionTableLoading = ref(false);
 
     const pagination = ref({
@@ -21,17 +21,12 @@ export function usePermission() {
             const responseData = await getAdminPermissions(requestData)
             // 只接受陣列；不是就給空陣列
             const raw = responseData?.data.Data.Permission;
-            permissionTableData.value = Array.isArray(raw)
-                ? raw
-                : Array.isArray(raw?.items)
-                    ? raw.items
-                    : {}
-console.log(permissionTableData.value,"pertable");
-                    console.log(raw,"rwqa");
+            permissionTableData.value =raw
+            console.log(permissionTableData.value, "permissionTableData");
         } finally {
             permissionTableLoading.value = false
         }
-    }  
+    }
 
     return { permissionTableLoading, permissionTableData, getPermissionRequest }
 };

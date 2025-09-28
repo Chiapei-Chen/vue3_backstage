@@ -15,7 +15,7 @@
     <!-- 彈跳視窗 -->
     <CreateEditGoodsType v-model="dialog.goodsTypeDialogVisible" 
     v-model:formModel="goodsTypeForm"
-    :isEdit="dialog.IsEditMode"
+    :isEdit="dialog.isEditMode"
      @confirm="handleSaveGoodsType" @close="resetDialog" />
 </template>
 
@@ -35,23 +35,23 @@ const {
 
 const dialog = ref({
     goodsTypeDialogVisible: false,
-    IsEditMode: false,
+    isEditMode: false,
 });
 
 const openEditDialog = (row: any) => {
     goodsTypeForm.value = { ...row };
     dialog.value.goodsTypeDialogVisible = true;
-    dialog.value.IsEditMode = true;
+    dialog.value.isEditMode = true;
 };
 
 const handleSaveGoodsType = async (formData: any) => {
     try {
-        const apiFn = dialog.value.IsEditMode ? updateGoodsType : addGoodsType;
+        const apiFn = dialog.value.isEditMode ? updateGoodsType : addGoodsType;
         const res = await apiFn(formData);
         if (res.data?.Code === 200) {
-            ElMessage.success(dialog.value.IsEditMode ? '更新成功' : '新增成功');
+            ElMessage.success(dialog.value.isEditMode ? '更新成功' : '新增成功');
             dialog.value.goodsTypeDialogVisible = false;
-            dialog.value.IsEditMode = false;
+            dialog.value.isEditMode = false;
             getGoodsTypeTableList();
         } else {
             ElMessage.error(res.data.Message || '操作失敗');
@@ -64,7 +64,7 @@ const handleSaveGoodsType = async (formData: any) => {
 
 const resetDialog = () => {
     dialog.value.goodsTypeDialogVisible = false;
-    dialog.value.IsEditMode = false;
+    dialog.value.isEditMode = false;
     goodsTypeForm.value = { ID: null, Name: '', Show: true };
 };
 
