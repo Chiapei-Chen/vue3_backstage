@@ -37,7 +37,7 @@
   </div>
   <!-- 新增商品&編輯商品 Dialog -->
   <CreateEditGoods v-model="dialog.goodsDialogVisible" v-model:formModel="goodsForm" :isEdit="dialog.IsEditMode"
-    @confirm="handleSaveGoods" @close="resetDialog" :goodsTypeList="goodsTypeList" />
+    @confirm="clickSave" @close="clickResetDialog" :goodsTypeList="goodsTypeList" />
 </template>
 
 <script setup>
@@ -56,7 +56,7 @@ const dialog = ref({
   IsEditMode: false
 });
 
-// 開啟編輯商品彈跳視窗
+/* 點擊【開啟編輯彈跳視窗】 */
 const openEditDialog = (row) => {
   goodsForm.value = {
     ...row,
@@ -68,8 +68,25 @@ const openEditDialog = (row) => {
   dialog.value.IsEditMode = true;
 };
 
-// 儲存商品
-const handleSaveGoods = async (formData) => {
+/** 點擊【重設彈跳視窗】 */ 
+const clickResetDialog = () => {
+  dialog.value.goodsDialogVisible = false;
+  dialog.value.IsEditMode = false;
+  goodsForm.value = {
+    Name: 
+    '',
+    Show: true,
+    GoodsTypeID: 1,
+    SpecsAllowance: 2,
+    GoodsSpecs: [{ Specs: '' }],
+    UnitPrice: 0,
+    ImagesIdnet: [],   // 用陣列
+    Description: ''
+  };
+};
+
+/** 點擊【儲存】 */ 
+const clickSave = async (formData) => {
   try {
     const apiFn = dialog.value.IsEditMode ? updateGoods : addGoods;
     const res = await apiFn(formData);
@@ -85,23 +102,6 @@ const handleSaveGoods = async (formData) => {
     console.error('操作商品發生錯誤:', error);
     ElMessage.error('系統錯誤，請稍後再試');
   }
-};
-
-// 重置彈跳視窗
-const resetDialog = () => {
-  dialog.value.goodsDialogVisible = false;
-  dialog.value.IsEditMode = false;
-  goodsForm.value = {
-    Name: 
-    '',
-    Show: true,
-    GoodsTypeID: 1,
-    SpecsAllowance: 2,
-    GoodsSpecs: [{ Specs: '' }],
-    UnitPrice: 0,
-    ImagesIdnet: [],   // 用陣列
-    Description: ''
-  };
 };
 
 

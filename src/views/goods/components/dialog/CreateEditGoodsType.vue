@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="visible" @close="handleCancel" 
+  <el-dialog v-model="visible" @close="clickCancel" 
   :title="isEdit ? '編輯分類' : '新增分類'" :width="width">
     <el-form ref="formRef" :model="formModel" :rules="formRules" :label-width="labelWidth">
       <el-form-item label="分類名稱" prop="Name">
@@ -9,8 +9,8 @@
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button @close="handleCancel">取消</el-button>
-        <el-button type="primary" @click="submitForm">{{ isEdit ? '編輯' : '新增' }}</el-button>
+        <el-button @close="clickCancel">取消</el-button>
+        <el-button type="primary" @click="clickSubmit">{{ isEdit ? '編輯' : '新增' }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -69,20 +69,17 @@ const formModel = defineModel('formModel', {
   })
 }); 
 
-/* ----------------------
-  Methods
------------------------ */
- const handleCancel = () => {
-  emit('close');
-};
-
 const formRef = ref();
 // 定義驗證邏輯
 const formRules = {
   Name: [{ required: true, message: '請輸入分類名稱', trigger: 'blur' }]
 };
 
-const submitForm = async () => {
+/* ----------------------
+  Methods
+----------------------- */
+/** 點擊【送出】 */
+const clickSubmit = async () => {
   if (!formRef.value) return;
   await formRef.value.validate((valid, fields) => {
     if (valid) {
@@ -91,5 +88,10 @@ const submitForm = async () => {
       console.warn('表單驗證未通過', fields);
     }
   });
+};
+
+/** 點擊【取消】 */
+ const clickCancel = () => {
+  emit('close');
 };
   </script>

@@ -16,7 +16,7 @@
     <CreateEditGoodsType v-model="dialog.goodsTypeDialogVisible" 
     v-model:formModel="goodsTypeForm"
     :isEdit="dialog.isEditMode"
-     @confirm="handleSaveGoodsType" @close="resetDialog" />
+     @confirm="clickSave" @close="clickResetDialog" />
 </template>
 
 <script setup lang="ts">
@@ -33,18 +33,28 @@ const {
     getGoodsTypeTableList,
 } = useGoodsTypeList();
 
+// 彈跳視窗
 const dialog = ref({
     goodsTypeDialogVisible: false,
     isEditMode: false,
 });
 
+/** 點擊【開啟編輯彈跳視窗】 */
 const openEditDialog = (row: any) => {
     goodsTypeForm.value = { ...row };
     dialog.value.goodsTypeDialogVisible = true;
     dialog.value.isEditMode = true;
 };
 
-const handleSaveGoodsType = async (formData: any) => {
+/** 點擊【重設彈跳視窗】 */
+const clickResetDialog = () => {
+    dialog.value.goodsTypeDialogVisible = false;
+    dialog.value.isEditMode = false;
+    goodsTypeForm.value = { ID: null, Name: '', Show: true };
+};
+
+/** 點擊【儲存】 */
+const clickSave = async (formData: any) => {
     try {
         const apiFn = dialog.value.isEditMode ? updateGoodsType : addGoodsType;
         const res = await apiFn(formData);
@@ -60,12 +70,6 @@ const handleSaveGoodsType = async (formData: any) => {
        console.error('操作商品發生錯誤:', error);
      ElMessage.error('系統錯誤，請稍後再試');
     }
-};
-
-const resetDialog = () => {
-    dialog.value.goodsTypeDialogVisible = false;
-    dialog.value.isEditMode = false;
-    goodsTypeForm.value = { ID: null, Name: '', Show: true };
 };
 
 onMounted(async () => {

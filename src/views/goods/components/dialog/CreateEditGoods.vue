@@ -18,9 +18,6 @@
           <el-option v-for="item in goodsTypeList" :key="item.ID" :label="item.Name" :value="item.ID"></el-option>
         </el-select>
       </el-form-item>
-      <!-- <el-form-item label="商品分類 ID" prop="GoodsTypeID">
-        <el-input-number v-model="formModel.GoodsTypeID" :min="1" />
-      </el-form-item> -->
 
       <el-form-item label="是否允許規格" prop="SpecsAllowance">
         <el-radio-group v-model="formModel.SpecsAllowance">
@@ -63,7 +60,6 @@
 
 <script setup>
 import { ref } from 'vue';
-import GoodsTypeList from '../../GoodsTypeList.vue';
 
 /* ----------------------
   Props
@@ -150,9 +146,7 @@ const clickSubmit = async () => {
   });
 };
 
-
 const formRef = ref();
-
 
 const addSpec = () => {
   formModel.value.GoodsSpecs.push({ Specs: '' })
