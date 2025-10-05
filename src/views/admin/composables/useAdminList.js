@@ -6,16 +6,14 @@ export function useAdminList() {
     const tableData = ref([]);
     const tableLoading = ref(false);
 
-    /** 搜尋 UI 應綁定的對象在這 */
     const searchFilter = ref({
 
     })
 
-
     const pagination = ref({
         currentPage: 0,
         pageSize: 20,
-        total: 0
+        total: 0,
     });
 
     const adminForm = ref({
@@ -37,8 +35,6 @@ export function useAdminList() {
             Phone: adminForm.Phone,
         };
 
-        console.log('### Admin PAYLOAD: ', requestData);
-
         const [err, res] = await to(getAdminMembers(requestData));
         tableLoading.value = false;
         if (res.data.Code != 200) {
@@ -48,7 +44,6 @@ export function useAdminList() {
 
         tableData.value = res.data.Data;
 
-        console.log('### Admin RES: ', tableData.value);
     };
 
     return {
