@@ -26,11 +26,11 @@
         </el-table>
     </div>
     <Permission v-model="dialog.dialogVisible" v-model:formModel="adminForm" :isEdit="dialog.isEditMode"
-        :permissionTableData="permissionTableData" @confirm="clickSubmit" @close="handleClose" />
+        :permissionTableData="permissionTableData" @confirm="clickSubmit" @close="clickClose" />
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
+import { toRaw, ref, onMounted, nextTick } from 'vue';
 import { ElMessage } from 'element-plus';
 import Permission from "./components/Permission.vue"
 import { useAdminList } from './composables/useAdminList';
@@ -61,45 +61,75 @@ const openAddDialog = () => {
 }
 /**打開【編輯】彈跳視窗 */
 const openEditDialog = (row) => {
+
+    getPermissionRequest(row.ID)
     adminForm.value = {
         ...row,
     };
     dialog.value.dialogVisible = true;
     dialog.value.isEditMode = true;
 
-    getPermissionRequest(row.ID)
-
 }
 
-/** 資料提交 */
-const clickSubmit = async (formData) => {
-    const permissionData = permissionTableData.value;
-    const personalData = adminForm.value;
-    console.log(permissionData, personalData)
+/** 點擊【關閉】 */
+const clickClose = () => {
+    dialog.value.dialogVisible = false;
+    dialog.value.isEditMode = false;
+    adminForm.value = {
+        ID: null,
+        Account: "",
+        Password: "",
+        Name: "",
+        Email: "",
+        Phone: "",
+    };
+}
+
+/** 點擊【提交】 */
+const clickSubmit = async ({ form, permissions: updatedPermissions }) => {
+
+    // 把 reactive proxy 轉回普通物件
+    const rawForm = toRaw(form);
+    const rawPermissions = toRaw(updatedPermissions);
+
+    console.log("要送出的表單資料:", rawForm);
+    console.log("要送出的權限資料:", rawPermissions);
 
     try {
         if (dialog.value.isEditMode) {
             // 編輯模式：更新權限 + 更新個人資料
-            const permissionResponse = await updateAdminPermissions(permissionData);
-            if (permissionResponse.Code != 200) {
+            const memberRsponse = await updateAdminMembers(rawForm);
+            if (memberRsponse.data.Code != 200) {
+                ElMessage.error('個人資料操作失敗，請稍後再試');
+            }
+            const permissionResponse = await updateAdminPermissions({
+                MemberID: rawForm.ID,
+                MemberPermission: rawPermissions,
+            });
+            if (permissionResponse.data.Code != 200) {
                 ElMessage.error('權限操作失敗，請稍後再試');
             }
 
-            const memberRsponse = await updateAdminMembers(personalData);
-            if (memberRsponse.Code != 200) {
-                ElMessage.error('個人資料操作失敗，請稍後再試');
-            }
         } else {
             // 新增模式：新增個人資料 + 新增權限
-            const permissionResponse = await updateAdminPermissions(permissionData);
-            if (permissionResponse.Code != 200) {
-                ElMessage.error('權限操作失敗，請稍後再試');
-            }
-            const memberRsponse = await addAdminMembers(personalData);
-            if (memberRsponse.Code != 200) {
+            const memberRsponse = await addAdminMembers(rawForm);
+            if (memberRsponse.data.Code != 200) {
                 ElMessage.error('個人資料操作失敗，請稍後再試');
             }
+            if (!memberRsponse.data?.MemberID) {
+                ElMessage.error('取得管理員失敗，無法新增其權限')
+            }
+            const permissionResponse = await updateAdminPermissions({
+                MemberID: memberRsponse.MemberID,
+                MemberPermission: rawPermissions,
+            });
+            if (permissionResponse.data.Code != 200) {
+                ElMessage.error('權限操作失敗，請稍後再試');
+            }
         }
+
+        ElMessage.success('操作成功');
+        clickClose();
 
     } catch (error) {
         console.error('操作發生錯誤:', error);

@@ -22,7 +22,6 @@ export function usePermission() {
             // 只接受陣列；不是就給空陣列
             const raw = responseData?.data.Data.Permission;
             permissionTableData.value =raw
-            console.log(permissionTableData.value, "permissionTableData");
         } finally {
             permissionTableLoading.value = false
         }

@@ -2,7 +2,7 @@
   <!--基本資訊內容-->
   <el-dialog v-model="dialogVisible" :title="isEdit ? '編輯資料' : '新增資料'" :width="width" @close="emit('close')">
     <!-- 基本資訊表單 -->
-    <el-form  ref="formRef" :model="formModel" label-width="80px">
+    <el-form ref="formRef" :model="formModel" label-width="80px">
       <el-form-item label="姓名" prop="Name">
         <el-input v-model="formModel.Name" />
       </el-form-item>
@@ -21,7 +21,7 @@
     </el-form>
 
     <!-- 權限表格內容 -->
-    <el-table :data="rows" style="width: 100%; margin-top: 16px;">
+    <el-table :data="permission" style="width: 100%; margin-top: 16px;">
       <el-table-column prop="name" label="權限名稱" />
       <el-table-column label="啟用">
         <template #default="{ row }">
@@ -32,14 +32,14 @@
 
     <!-- 底部按鈕 -->
     <template #footer>
-      <el-button  @click="dialogVisible = false">取消</el-button>
-      <el-button type="primary" @click="submit">確認</el-button>
+      <el-button @click="dialogVisible = false">取消</el-button>
+      <el-button type="primary" @click="clickSubmit">確認</el-button>
     </template>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
-import { computed, PropType, ref } from "vue";
+import { PropType, ref, watch } from "vue";
 const formRef = ref();
 /* ----------------------
   Props
@@ -52,6 +52,20 @@ const props = defineProps({
   },
   isEdit: { type: Boolean, default: false },
 });
+console.log(props.permissionTableData);
+/*本地存*/
+const permission = ref<{ name: string; activity: boolean }[]>([]);
+console.log(permission, "現有資料");
+watch(
+  () => props.permissionTableData,
+  (newVal) => {
+    permission.value = Object.entries(newVal || {}).map(([key, val]) => ({
+      name: key,
+      activity: !!val.Activity,
+    }));
+  },
+  { immediate: true, deep: true }
+);
 
 /* ----------------------
   Models
@@ -72,17 +86,6 @@ const formModel = defineModel("formModel", {
 });
 
 /* ----------------------
-  Computed
------------------------ */
-const rows = computed(() => {
-  const dict = props.permissionTableData || {};
-  return Object.entries(dict).map(([key, val]) => ({
-    name: key,
-    activity: !!val.Activity,
-  }));
-});
-
-/* ----------------------
   Emits
 ----------------------- */
 const emit = defineEmits<{
@@ -93,21 +96,41 @@ const emit = defineEmits<{
 /* ----------------------
   Methods
 ----------------------- */
-const submit = async () => {
-  console.log("提交申請");
-  if (!formRef.value) {
-    console.log("為存在");
-    return;
+// const submit = async () => {
+//   console.log("提交申請");
+//   if (!formRef.value) {
+//     console.log("為存在");
+//     return;
+//   }
+//   //驗證
+//   const valid = await formRef.value.validate();
+//   if (valid) {
+//     emit('confirm', formModel.value);
+//   } else {
+//     console.warn('表單驗證未通過');
+//   }
+
+//   emit('confirm', formModel.value);
+// };
+
+/** 點擊【送出】 */
+const clickSubmit = async () => {
+  if (!formRef.value) return;
+  const valid = await formRef.value.validate();
+  if (!valid) return;
+
+  // 把 rows 轉回權限結構
+  const updatedPermissions: Record<string, { Activity: boolean }> = {};
+  for (const row of permission.value) {
+    updatedPermissions[row.name] = { Activity: row.activity };
   }
-      emit('confirm', formModel.value);
-  await formRef.value.validate((valid, fields) => {
+  console.log(updatedPermissions, "更改的權限")
 
-
-    // if(valid){
-    //   emit('confirm',formModel.value);
-    // }else{
-    //         console.warn('表單驗證未通過', fields);
-    // }
+  // 一次 emit 完整資料
+  emit("confirm", {
+    form: formModel.value,
+    permissions: updatedPermissions,
   });
 };
+
 </script>
