@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="visible" @close="clickCancel" 
+  <el-dialog v-model="dialogVisible" @close="clickCancel" 
   :title="isEdit ? '編輯分類' : '新增分類'" :width="width">
     <el-form ref="formRef" :model="formModel" :rules="formRules" :label-width="labelWidth">
       <el-form-item label="分類名稱" prop="Name">
@@ -18,6 +18,12 @@
 
 <script setup lang="ts">
 import { PropType, ref } from 'vue';
+
+const formRef = ref();
+// 定義驗證邏輯
+const formRules = {
+  Name: [{ required: true, message: '請輸入分類名稱', trigger: 'blur' }]
+};
 
 /* ----------------------
   Props
@@ -51,10 +57,12 @@ const emit = defineEmits(['close', 'confirm']);
 /* ----------------------
   Models
 ----------------------- */
-const visible = defineModel<boolean>('visible', {
+// 彈跳視窗顯示
+const dialogVisible = defineModel<boolean>('visible', {
   type: Boolean,
   default: false
 })
+
 // 表單初始化
 const formModel = defineModel('formModel', {
   type:Object as PropType<{
@@ -68,13 +76,6 @@ const formModel = defineModel('formModel', {
     Show: true           
   })
 }); 
-
-const formRef = ref();
-// 定義驗證邏輯
-const formRules = {
-  Name: [{ required: true, message: '請輸入分類名稱', trigger: 'blur' }]
-};
-
 /* ----------------------
   Methods
 ----------------------- */
@@ -94,4 +95,5 @@ const clickSubmit = async () => {
  const clickCancel = () => {
   emit('close');
 };
+
   </script>

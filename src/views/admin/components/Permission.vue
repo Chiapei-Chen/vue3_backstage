@@ -40,7 +40,10 @@
 
 <script setup lang="ts">
 import { PropType, ref, watch } from "vue";
+
 const formRef = ref();
+/*權限*/
+const permission = ref<{ name: string; activity: boolean }[]>([]);
 /* ----------------------
   Props
 ----------------------- */
@@ -52,10 +55,8 @@ const props = defineProps({
   },
   isEdit: { type: Boolean, default: false },
 });
-console.log(props.permissionTableData);
-/*本地存*/
-const permission = ref<{ name: string; activity: boolean }[]>([]);
-console.log(permission, "現有資料");
+
+//------------------------------------------------------
 watch(
   () => props.permissionTableData,
   (newVal) => {
@@ -66,7 +67,6 @@ watch(
   },
   { immediate: true, deep: true }
 );
-
 /* ----------------------
   Models
 ----------------------- */
@@ -96,23 +96,6 @@ const emit = defineEmits<{
 /* ----------------------
   Methods
 ----------------------- */
-// const submit = async () => {
-//   console.log("提交申請");
-//   if (!formRef.value) {
-//     console.log("為存在");
-//     return;
-//   }
-//   //驗證
-//   const valid = await formRef.value.validate();
-//   if (valid) {
-//     emit('confirm', formModel.value);
-//   } else {
-//     console.warn('表單驗證未通過');
-//   }
-
-//   emit('confirm', formModel.value);
-// };
-
 /** 點擊【送出】 */
 const clickSubmit = async () => {
   if (!formRef.value) return;

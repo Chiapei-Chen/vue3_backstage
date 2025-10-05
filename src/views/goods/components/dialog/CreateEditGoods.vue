@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="visible" :title="isEdit ? '編輯商品' : '新增商品'" :width="width" @close="emit('close')">
+  <el-dialog v-model="dialogVisible" :title="isEdit ? '編輯商品' : '新增商品'" :width="width" @close="emit('close')">
     <el-form ref="formRef" :model="formModel" :rules="formRules" label-width="120px">
       <el-form-item label="商品名稱" prop="Name">
         <el-input v-model="formModel.Name" placeholder="請輸入商品名稱" />
@@ -60,7 +60,14 @@
 
 <script setup>
 import { ref } from 'vue';
-
+const formRef = ref();
+//定義驗證邏輯
+const formRules = {
+  Name: [{ required: true, message: '請輸入商品名稱', trigger: 'blur' }],
+  GoodsTypeID: [{ required: true, message: '請輸入分類 ID', trigger: 'blur' }],
+  UnitPrice: [{ required: true, message: '請輸入價格', trigger: 'blur' }],
+  ImagesIdnet: [{ required: true, message: '請輸入圖片識別碼', trigger: 'blur' }],
+}
 /* ----------------------
   Props
 ----------------------- */
@@ -92,15 +99,18 @@ defineProps({
 });
 
 /* ----------------------
-  Emits 元件聲明事件
+  Emits 
 ----------------------- */
 const emit = defineEmits(['close', 'confirm']);
 
 /* ----------------------
   Models
 ----------------------- */
-// 控制是否顯示
-const visible = defineModel();
+// 彈跳視窗顯示
+const dialogVisible = defineModel<boolean>('visible', {
+  type: Boolean,
+  default: false
+})
 // 表單初始化
 const formModel = defineModel('formModel', {
   default: () => ({
@@ -120,14 +130,6 @@ const formModel = defineModel('formModel', {
 /* ----------------------
   Methods
 ----------------------- */
-//定義驗證邏輯
-const formRules = {
-  Name: [{ required: true, message: '請輸入商品名稱', trigger: 'blur' }],
-  GoodsTypeID: [{ required: true, message: '請輸入分類 ID', trigger: 'blur' }],
-  UnitPrice: [{ required: true, message: '請輸入價格', trigger: 'blur' }],
-  ImagesIdnet: [{ required: true, message: '請輸入圖片識別碼', trigger: 'blur' }],
-}
-
 /** 點擊【取消】 */
 const clickCancel = () => {
   emit('close');
@@ -145,8 +147,6 @@ const clickSubmit = async () => {
     }
   });
 };
-
-const formRef = ref();
 
 const addSpec = () => {
   formModel.value.GoodsSpecs.push({ Specs: '' })

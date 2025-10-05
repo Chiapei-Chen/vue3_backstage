@@ -45,7 +45,9 @@ const dialog = ref({
     dialogVisible: false,
     isEditMode: false,
 });
-
+/* ----------------------
+  Methods
+----------------------- */
 /**打開【新增】彈跳視窗 */
 const openAddDialog = () => {
     adminForm.value = {
@@ -59,6 +61,7 @@ const openAddDialog = () => {
     dialog.value.dialogVisible = true;
     dialog.value.isEditMode = false;
 }
+
 /**打開【編輯】彈跳視窗 */
 const openEditDialog = (row) => {
 
