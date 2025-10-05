@@ -140,8 +140,8 @@ const clickSubmit = async ({ form, permissions: updatedPermissions }) => {
             if (memberRsponse.data.Code != 200) {
                 ElMessage.error('個人資料操作失敗，請稍後再試');
             }
-            if (!memberRsponse.data?.MemberID) {
-                ElMessage.error('取得管理員失敗，無法新增其權限')
+            if (!memberRsponse.data?.Data.ID) {
+                ElMessage.error('取得管理員ID失敗，無法新增其權限')
             }
             const permissionResponse = await updateAdminPermissions({
                 MemberID: memberRsponse.MemberID,
