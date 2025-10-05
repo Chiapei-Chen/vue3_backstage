@@ -9,7 +9,7 @@
       <el-form-item label="帳號" prop="Account">
         <el-input v-model="formModel.Account" />
       </el-form-item>
-      <el-form-item label="密碼" prop="Password">
+      <el-form-item label="密碼" prop="Password" type="password">
         <el-input v-model="formModel.Password" />
       </el-form-item>
       <el-form-item label="信箱" prop="Email">
@@ -32,7 +32,7 @@
 
     <!-- 底部按鈕 -->
     <template #footer>
-      <el-button @click="dialogVisible = false">取消</el-button>
+      <el-button @click="clickClose">取消</el-button>
       <el-button type="primary" @click="clickSubmit">確認</el-button>
     </template>
   </el-dialog>
@@ -116,4 +116,9 @@ const clickSubmit = async () => {
   });
 };
 
+
+/** 點擊【關閉】 */
+const clickClose = () => {
+    dialogVisible.value = false;
+}
 </script>

@@ -50,6 +50,7 @@ const dialog = ref({
 ----------------------- */
 /**打開【新增】彈跳視窗 */
 const openAddDialog = () => {
+    // 管理員資料
     adminForm.value = {
         ID: null,
         Account: "",
@@ -57,6 +58,26 @@ const openAddDialog = () => {
         Name: "",
         Email: "",
         Phone: "",
+    };
+
+    // 權限資料
+    permissionTableData.value = {
+        home_dashboard: { Activity: false },
+        admin_manage_add: { Activity: false },
+        admin_manage_del: { Activity: false },
+        admin_manage_edit: { Activity: false },
+        admin_manage_page: { Activity: false },
+        goods_manage_add: { Activity: false },
+        goods_manage_del: { Activity: false },
+        goods_manage_edit_goods: { Activity: false },
+        goods_manage_edit_type: { Activity: false },
+        goods_manage_page: { Activity: false },
+        member_manage_del: { Activity: false },
+        member_manage_detail: { Activity: false },
+        member_manage_page: { Activity: false },
+        order_manage_del: { Activity: false },
+        order_manage_edit: { Activity: false },
+        order_manage_page: { Activity: false },
     };
     dialog.value.dialogVisible = true;
     dialog.value.isEditMode = false;
