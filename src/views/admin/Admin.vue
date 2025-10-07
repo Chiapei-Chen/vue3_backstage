@@ -1,43 +1,53 @@
 <template>
-    <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1"> <!--搜尋-->
+    <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
         <!--搜尋-->
         <div class="flex items-center gap-2">
-            <div class="w-[140px]">
-
-            </div>
-            <el-button type="warning" icon="Search" @click="">搜尋</el-button>
+            <el-form :inline="true" :model="queryForm">
+                <el-form-item label="帳號">
+                    <el-input v-model="queryForm.Account" placeholder="輸入帳號" clearable />
+                </el-form-item>
+                <el-form-item label="姓名">
+                    <el-input v-model="queryForm.Name" placeholder="輸入姓名" clearable />
+                </el-form-item>
+                <el-button type="warning" icon="Search" @click="clickSearch">搜尋</el-button>
+            </el-form>
         </div>
-        <el-button type="primary" icon="Plus" @click="openAddDialog">新增管理員</el-button>
+        <el-button type="success" icon="Plus" @click="clickOpenAddDialog">新增管理員</el-button>
     </div>
     <!--表格內容-->
     <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
         <el-table :data="tableData" stripe v-loading="tableLoading">
             <el-table-column prop="Account" label="帳號"></el-table-column>
-            <el-table-column prop="Password" label="密碼"></el-table-column>
             <el-table-column prop="Name" label="姓名"></el-table-column>
             <el-table-column prop="Email" label="信箱"> </el-table-column>
             <el-table-column prop="Phone" label="電話"></el-table-column>
 
             <el-table-column label="操作">
+
                 <template #default="{ row }">
-                    <el-button type="primary" size="small" @click="openEditDialog(row)">編輯</el-button>
+                    <el-button type="primary" size="small" @click="clickOpenEditDialog(row)">編輯</el-button>
                 </template>
             </el-table-column>
         </el-table>
     </div>
     <Permission v-model="dialog.dialogVisible" v-model:formModel="adminForm" :isEdit="dialog.isEditMode"
-        :permissionTableData="permissionTableData" @confirm="clickSubmit" @close="clickClose" />
+        :permissionTableData="permissionTableData" @confirm="clickSubmit" @close="clickCloseDialog" />
+
+    <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
+        v-model:current-page="pagination.currentPage" v-model:page-size="pagination.pageSize"
+        :page-sizes="[10, 20, 50, 100]"  />
+
 </template>
 
 <script setup>
-import { toRaw, ref, onMounted, nextTick } from 'vue';
+import { toRaw, ref, onMounted, nextTick, reactive } from 'vue';
 import { ElMessage } from 'element-plus';
 import Permission from "./components/Permission.vue"
 import { useAdminList } from './composables/useAdminList';
 import { usePermission } from './composables/usePermission';
 import { addAdminMembers, updateAdminMembers, updateAdminPermissions } from '@/service/api';
 
-const { tableData, tableLoading, adminForm, getAdminRequest } = useAdminList();
+const { tableData, tableLoading, adminForm, getAdminRequest, pagination } = useAdminList();
 const { getPermissionRequest, permissionTableData } = usePermission();
 
 /** 彈跳視窗 */
@@ -45,11 +55,22 @@ const dialog = ref({
     dialogVisible: false,
     isEditMode: false,
 });
+/** 查詢表單 */
+const queryForm = reactive({
+    Account: '',
+    Password: '',
+    Name: '',
+    Email: '',
+    Phone: '',
+    Page: 1,
+    PageLimit: 10,
+});
+
 /* ----------------------
   Methods
 ----------------------- */
-/**打開【新增】彈跳視窗 */
-const openAddDialog = () => {
+/** 點擊打開【新增】彈跳視窗 */
+const clickOpenAddDialog = () => {
     // 管理員資料
     adminForm.value = {
         ID: null,
@@ -83,8 +104,8 @@ const openAddDialog = () => {
     dialog.value.isEditMode = false;
 }
 
-/**打開【編輯】彈跳視窗 */
-const openEditDialog = (row) => {
+/** 點擊打開【編輯】彈跳視窗 */
+const clickOpenEditDialog = (row) => {
 
     getPermissionRequest(row.ID)
     adminForm.value = {
@@ -95,8 +116,8 @@ const openEditDialog = (row) => {
 
 }
 
-/** 點擊【關閉】 */
-const clickClose = () => {
+/** 點擊【關閉】彈跳視窗 */
+const clickCloseDialog = () => {
     dialog.value.dialogVisible = false;
     dialog.value.isEditMode = false;
     adminForm.value = {
@@ -115,10 +136,6 @@ const clickSubmit = async ({ form, permissions: updatedPermissions }) => {
     // 把 reactive proxy 轉回普通物件
     const rawForm = toRaw(form);
     const rawPermissions = toRaw(updatedPermissions);
-
-    console.log("要送出的表單資料:", rawForm);
-    console.log("要送出的權限資料:", rawPermissions);
-
     try {
         if (dialog.value.isEditMode) {
             // 編輯模式：更新權限 + 更新個人資料
@@ -153,7 +170,8 @@ const clickSubmit = async ({ form, permissions: updatedPermissions }) => {
         }
 
         ElMessage.success('操作成功');
-        clickClose();
+        clickCloseDialog();
+         getAdminRequest(queryForm);
 
     } catch (error) {
         console.error('操作發生錯誤:', error);
@@ -161,9 +179,19 @@ const clickSubmit = async ({ form, permissions: updatedPermissions }) => {
     }
 };
 
+/** 點擊【搜尋】 */
+const clickSearch = async () => {
+    const response = await getAdminRequest(queryForm);
+
+    if (!response) {
+        ElMessage.error('查詢失敗，請稍後再試');
+    }
+    console.log(response, "rsp");
+    ElMessage.success('查詢成功');
+};
 onMounted(async () => {
     await nextTick();
-    getAdminRequest();
+    getAdminRequest(queryForm);
 })
 
 </script>

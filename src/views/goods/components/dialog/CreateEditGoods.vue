@@ -51,7 +51,8 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="clickCancel">取消</el-button>
-        <el-button :class="isEdit ? 'btn--update' : 'btn--create'" @click="clickSubmit">{{ isEdit ? '編輯' : '新增'
+        <el-button type="success" :class="isEdit ? 'btn--update' : 'btn--create'" @click="clickSubmit">{{ isEdit ? '編輯'
+          : '新增'
           }}</el-button>
       </div>
     </template>
@@ -107,7 +108,7 @@ const emit = defineEmits(['close', 'confirm']);
   Models
 ----------------------- */
 // 彈跳視窗顯示
-const dialogVisible = defineModel<boolean>('visible', {
+const dialogVisible = defineModel < boolean > ('visible', {
   type: Boolean,
   default: false
 })
