@@ -10,7 +10,7 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @close="clickCancel">取消</el-button>
-        <el-button type="primary" @click="clickSubmit">{{ isEdit ? '編輯' : '新增' }}</el-button>
+        <el-button type="success" @click="clickSubmit">{{ isEdit ? '編輯' : '新增' }}</el-button>
       </div>
     </template>
   </el-dialog>
