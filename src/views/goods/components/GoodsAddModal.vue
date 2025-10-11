@@ -18,6 +18,22 @@
         </el-select>
       </el-form-item>
 
+      <el-form-item label="是否允許規格" prop="SpecsAllowance">
+        <el-radio-group v-model="formModel.SpecsAllowance">
+          <el-radio-button :value="1">允許</el-radio-button>
+          <el-radio-button :value="0">不允許</el-radio-button>
+          <el-radio-button :value="2">依照規格陣列</el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+
+      <el-form-item v-if="formModel.SpecsAllowance === 2" label="商品規格">
+        <div v-for="(spec, index) in formModel.GoodsSpecs" :key="index" class="spec-row">
+          <el-input v-model="spec.Specs" placeholder="請輸入規格內容" class="w-3/4" />
+          <el-button type="danger" @click="removeSpec(formModel, index)">刪除</el-button>
+        </div>
+        <el-button type="primary" @click="addSpec(formModel)" class="mt-2">新增規格</el-button>
+      </el-form-item>
+
       <el-form-item label="商品價格" prop="UnitPrice">
         <el-input-number v-model="formModel.UnitPrice" :min="0" />
       </el-form-item>
@@ -33,16 +49,14 @@
 
     <template #footer>
       <el-button @click="emit('close')">取消</el-button>
-      <el-button type="success" @click="clickSubmit">確認</el-button>
+      <el-button type="success" @click="clickSubmit">新增</el-button>
     </template>
   </el-dialog>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { ElMessage } from 'element-plus'
-import { useGoodsForm } from '../composables/useGoodsForm'
-import { addGoods } from '@/service/api';
+import { useGoodsForm } from './useGoodsForm.js'
 
 const props = defineProps({
   width: { type: [String, Number], default: 500 },
@@ -50,27 +64,13 @@ const props = defineProps({
 })
 const emit = defineEmits(['close', 'confirm'])
 const dialogVisible = defineModel('visible', { default: false })
-const { formRef, formRules, getEmptyForm, } = useGoodsForm()
+
+const { formRef, formRules, getEmptyForm, addSpec, removeSpec } = useGoodsForm()
 const formModel = ref(getEmptyForm())
-//-----------------------------------------------------------------------------------------------
-/** 點擊【提交】 */
+
 const clickSubmit = async () => {
-  try {
-    await formRef.value.validate(async (valid) => {
-      if (valid) {
-        const res = await addGoods(formModel.value);
-        if (res.data.Code === 200) {
-          emit('confirm');
-          dialogVisible.value = false
-        }
-        else {
-          ElMessage.error(res.data.Message || '新增失敗')
-        }
-      }
-    })
-  } catch (error) {
-    console.error('操作商品發生錯誤:', error);
-    ElMessage.error('系統錯誤，請稍後再試');
-  }
+  await formRef.value.validate((valid) => {
+    if (valid) emit('confirm', formModel.value)
+  })
 }
 </script>

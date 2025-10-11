@@ -1,10 +1,5 @@
 <template>
-  <el-dialog
-    v-model="dialogVisible"
-    title="編輯商品"
-    :width="width"
-    @close="emit('close')"
-  >
+  <el-dialog v-model="dialogVisible" title="編輯商品" :width="width" @close="emit('close')">
     <el-form ref="formRef" :model="formModel" :rules="formRules" label-width="120px">
       <el-form-item label="商品名稱" prop="Name">
         <el-input v-model="formModel.Name" placeholder="請輸入商品名稱" />
@@ -19,15 +14,26 @@
 
       <el-form-item label="商品分類" prop="GoodsTypeID">
         <el-select v-model="formModel.GoodsTypeID" placeholder="請選擇商品分類">
-          <el-option
-            v-for="item in goodsTypeList"
-            :key="item.ID"
-            :label="item.Name"
-            :value="item.ID"
-          />
+          <el-option v-for="item in goodsTypeList" :key="item.ID" :label="item.Name" :value="item.ID" />
         </el-select>
       </el-form-item>
-      
+
+      <el-form-item label="是否允許規格" prop="SpecsAllowance">
+        <el-radio-group v-model="formModel.SpecsAllowance">
+          <el-radio-button :value="1">允許</el-radio-button>
+          <el-radio-button :value="0">不允許</el-radio-button>
+          <el-radio-button :value="2">依照規格陣列</el-radio-button>
+        </el-radio-group>
+      </el-form-item>
+
+      <el-form-item v-if="formModel.SpecsAllowance === 2" label="商品規格">
+        <div v-for="(spec, index) in formModel.GoodsSpecs" :key="index" class="spec-row">
+          <el-input v-model="spec.Specs" placeholder="請輸入規格內容" class="w-3/4" />
+          <el-button type="danger" @click="removeSpec(formModel, index)">刪除</el-button>
+        </div>
+        <el-button type="primary" @click="addSpec(formModel)" class="mt-2">新增規格</el-button>
+      </el-form-item>
+
       <el-form-item label="商品價格" prop="UnitPrice">
         <el-input-number v-model="formModel.UnitPrice" :min="0" />
       </el-form-item>
@@ -37,32 +43,45 @@
       </el-form-item>
 
       <el-form-item label="商品說明" prop="Description">
+<<<<<<< HEAD
         <el-input
           type="textarea"
           v-model="formModel.Description"
           placeholder="請輸入說明"
         />
+=======
+        <el-input type="textarea" v-model="formModel.Description" placeholder="請輸入說明" />
+>>>>>>> master
       </el-form-item>
     </el-form>
 
     <template #footer>
       <el-button @click="emit('close')">取消</el-button>
+<<<<<<< HEAD
       <el-button type="success" @click="clickSubmit">確認</el-button>
+=======
+      <el-button type="primary" @click="clickSubmit">儲存修改</el-button>
+>>>>>>> master
     </template>
   </el-dialog>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue'
+<<<<<<< HEAD
 import { ElMessage } from 'element-plus'
 import { useGoodsForm } from '../composables/useGoodsForm'
 import { updateGoods } from '@/service/api'
+=======
+import { useGoodsForm } from './useGoodsForm.js'
+>>>>>>> master
 
 const props = defineProps({
   width: { type: [String, Number], default: 500 },
   goodsTypeList: { type: Array, default: () => [] },
   editData: { type: Object, default: () => ({}) }
 })
+<<<<<<< HEAD
 
 const emit = defineEmits(['close', 'confirm'])
 const dialogVisible = defineModel('visible', { default: false })
@@ -90,6 +109,14 @@ const clickSubmit = async () => {
 }
 
 // 監聽外部傳入的 editData，自動更新表單內容
+=======
+const emit = defineEmits(['close', 'confirm'])
+const dialogVisible = defineModel('visible', { default: false })
+
+const { formRef, formRules, getEmptyForm, addSpec, removeSpec } = useGoodsForm()
+const formModel = ref(getEmptyForm())
+
+>>>>>>> master
 watch(
   () => props.editData,
   (val) => {
@@ -98,4 +125,12 @@ watch(
   { immediate: true, deep: true }
 )
 
+<<<<<<< HEAD
+=======
+const clickSubmit = async () => {
+  await formRef.value.validate((valid) => {
+    if (valid) emit('confirm', formModel.value)
+  })
+}
+>>>>>>> master
 </script>
