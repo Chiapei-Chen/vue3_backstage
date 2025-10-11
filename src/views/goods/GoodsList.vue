@@ -7,21 +7,37 @@
       </div>
       <div class="w-[180px]">
         <el-select v-model="searchFilter.GoodsType" placeholder="選擇分類" clearable>
-          <el-option v-for="item in goodsTypeList" :key="item.ID" :label="item.Name" :value="item.ID" />
+          <el-option
+            v-for="item in goodsTypeList"
+            :key="item.ID"
+            :label="item.Name"
+            :value="item.ID"
+          />
         </el-select>
       </div>
       <el-button type="primary" icon="Search" @click="getGoodsListRequest(searchFilter, false)">
         搜尋
       </el-button>
     </div>
-    <el-button type="success" icon="Plus" @click="showAddDialog = true">
+    <el-button
+      class="btn--create"
+      plain
+      icon="Plus"
+      @click="showAddDialog = true"
+    >
       新增商品
     </el-button>
   </div>
 
   <!--表格內容-->
   <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
-    <el-table :data="tableData" flexible stripe style="width: 100%" v-loading="tableLoading">
+    <el-table
+      :data="tableData"
+      flexible
+      stripe
+      style="width: 100%"
+      v-loading="tableLoading"
+    >
       <el-table-column prop="ID" label="ID" width="100" />
       <el-table-column label="商品分類">
         <template #default="{ row }">
@@ -38,22 +54,31 @@
       </el-table-column>
     </el-table>
   </div>
-  <!-- 新增商品&編輯商品 Dialog -->
-  <GoodsAddModal v-model:visible="showAddDialog" :goodsTypeList="goodsTypeList" @confirm="handleAddConfirm" />
 
-  <GoodsEditModal v-model:visible="showEditDialog" :editData="editForm" :goodsTypeList="goodsTypeList"
-    @confirm="handleEditConfirm" />
-  <CreateEditGoods v-model="dialog.goodsDialogVisible" v-model:formModel="goodsForm" :isEdit="dialog.IsEditMode"
-    @confirm="clickSave" @close="clickResetDialog" :goodsTypeList="goodsTypeList" />
+  <!-- 新增商品 -->
+  <GoodsAddModal
+    v-model:visible="showAddDialog"
+    :goodsTypeList="goodsTypeList"
+    @confirm="onAddSuccess"
+    @close="showAddDialog = false"
+  />
+
+  <!-- 編輯商品 -->
+  <GoodsEditModal
+    v-model:visible="showEditDialog"
+    :editData="editForm"
+    :goodsTypeList="goodsTypeList"
+    @confirm="onEditSuccess"
+    @close="showEditDialog = false"
+  />
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
-import { useGoodsList } from './composables';
-import GoodsAddModal from './components/GoodsAddModal.vue';
-import GoodsEditModal from './components/GoodsAddModal.vue';
-import { addGoods, updateGoods } from '@/service/api';
-import { ElMessage } from 'element-plus';
+import { ref, onMounted, nextTick } from 'vue'
+import { useGoodsList } from './composables'
+import GoodsAddModal from './components/GoodsAddModal.vue'
+import GoodsEditModal from './components/GoodsEditModal.vue'
+import { ElMessage } from 'element-plus'
 
 const {
   searchFilter,
