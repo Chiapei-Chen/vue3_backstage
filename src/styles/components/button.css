@@ -1,0 +1,62 @@
+
+.el-button.btn--create {
+  --el-button-bg-color: var(--btn-create-bg);
+  --el-button-text-color: var(--btn-create-text);
+  --el-button-border-color: var(--btn-create-bg);
+  --el-button-hover-bg-color: var(--btn-create-hover);
+  --el-button-hover-text-color: var(--btn-create-text);
+  --el-button-hover-border-color: var(--btn-create-hover);
+}
+
+.el-button.is-plain.btn--create {
+  --el-button-bg-color: var(--btn-read-bg);
+  --el-button-text-color: var(--btn-create-bg);
+  --el-button-border-color: var(--btn-create-bg);
+  --el-button-hover-bg-color: var(--btn-create-bg);
+  --el-button-hover-text-color: var(--btn-create-text);
+  --el-button-hover-border-color: var(--btn-create-bg);
+}
+
+/* ====== 這段是 “自家元件/utility”（Tailwind 會處理，所以能用 @apply） ====== */
+@layer components {
+  /* 基底按鈕（自家） */
+  .btn {
+    @apply inline-flex items-center justify-center font-medium transition-colors select-none;
+    @apply focus:outline-none px-3 py-2 rounded;
+    @apply disabled:opacity-60 disabled:cursor-not-allowed;
+
+    gap: var(--btn-gap);
+    border-radius: var(--btn-radius);
+  }
+
+  /* 例：做一個自訂 utility（兩種寫法擇一） */
+  @layer utilities {
+    .hover-scale-105 { @apply transition-transform duration-200 ease-out hover:scale-105; }
+  }
+  /* v4 也可用 @utility（等同於上面的 utilities） */
+  /* @utility hover-scale-105 { @apply transition-transform duration-200 ease-out hover:scale-105; } */
+}
+
+/* ====== 這段是 “覆蓋 Element Plus” —— 純 CSS，不要用 @layer/@apply ====== */
+
+/* 非 plain（實心） */
+.el-button.btn--create {
+  --el-button-bg-color: var(--btn-create-bg);
+  --el-button-text-color: var(--btn-create-text);
+  --el-button-border-color: var(--btn-create-bg);
+
+  --el-button-hover-bg-color: var(--btn-create-hover);
+  --el-button-hover-text-color: var(--btn-create-text);
+  --el-button-hover-border-color: var(--btn-create-hover);
+}
+
+/* 有加 plain 時（EP 會掛 is-plain） */
+.el-button.is-plain.btn--create {
+  --el-button-bg-color: var(--btn-read-bg);
+  --el-button-text-color: var(--btn-create-bg);
+  --el-button-border-color: var(--btn-create-bg);
+
+  --el-button-hover-bg-color: var(--btn-create-bg);
+  --el-button-hover-text-color: var(--btn-create-text);
+  --el-button-hover-border-color: var(--btn-create-bg);
+}

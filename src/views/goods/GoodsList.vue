@@ -1,24 +1,31 @@
 <template>
   <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
+    <!--搜尋-->
     <div class="flex items-center gap-2">
       <div class="w-[140px]">
-        <el-input v-model="searchFilter.ID" placeholder="Search By ID" clearable />
+        <el-input v-model="searchFilter.ID" placeholder="搜尋商品ID" clearable />
       </div>
       <div class="w-[180px]">
-        <el-select v-model="searchFilter.GoodsType" placeholder="Select Goods Type" clearable>
+        <el-select v-model="searchFilter.GoodsType" placeholder="選擇分類" clearable>
           <el-option v-for="item in goodsTypeList" :key="item.ID" :label="item.Name" :value="item.ID" />
         </el-select>
       </div>
       <el-button type="primary" icon="Search" @click="getGoodsListRequest(searchFilter, false)">搜尋</el-button>
     </div>
-    <el-button type="primary" plain icon="Plus" @click="dialog.goodsDialogVisible = true">新增商品</el-button>
+    <el-button class="btn--create" plain icon="Plus" @click="dialog.goodsDialogVisible = true">新增商品</el-button>
   </div>
+  <!--表格內容-->
   <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
     <el-table :data="tableData" flexible stripe style="width: 100%" v-loading="tableLoading">
       <el-table-column prop="ID" label="ID" width="100"> </el-table-column>
-      <el-table-column prop="GoodsTypeID" label="商品分類"></el-table-column>
-      <el-table-column prop="Name" label="商品名稱"> </el-table-column>
+      <!-- <el-table-column prop="GoodsTypeID" label="商品分類"></el-table-column> -->
+      <el-table-column label="商品分類">
+        <template #default="{ row }">
+          {{ getGoodsTypeName(row.GoodsTypeID) }}
+        </template>
+      </el-table-column>
 
+      <el-table-column prop="Name" label="商品名稱"> </el-table-column>
       <el-table-column prop="UnitPrice" label="價格"> </el-table-column>
       <el-table-column label="操作" width="150">
         <template #default="{ row }">
@@ -34,7 +41,7 @@
   <GoodsEditModal v-model:visible="showEditDialog" :editData="editForm" :goodsTypeList="goodsTypeList"
     @confirm="handleEditConfirm" />
   <CreateEditGoods v-model="dialog.goodsDialogVisible" v-model:formModel="goodsForm" :isEdit="dialog.IsEditMode"
-    @confirm="handleSaveGoods" @close="resetDialog" />
+    @confirm="clickSave" @close="clickResetDialog" :goodsTypeList="goodsTypeList" />
 </template>
 
 <script setup>
@@ -45,7 +52,7 @@ import GoodsEditModal from './components/GoodsAddModal.vue';
 import { addGoods, updateGoods } from '@/service/api';
 import { ElMessage } from 'element-plus';
 
-const { searchFilter, tableData, tableLoading, goodsForm, goodsTypeList, getGoodsListRequest, getGoodsTypeList } =
+const { searchFilter, tableData, tableLoading, goodsForm, goodsTypeList, getGoodsTypeName, getGoodsListRequest, getGoodsTypeList } =
   useGoodsList();
 
 // 彈跳視窗
@@ -54,7 +61,7 @@ const dialog = ref({
   IsEditMode: false
 });
 
-// 開啟編輯商品彈跳視窗
+/* 點擊【開啟編輯彈跳視窗】 */
 const openEditDialog = (row) => {
   goodsForm.value = {
     ...row,
@@ -66,13 +73,13 @@ const openEditDialog = (row) => {
   dialog.value.IsEditMode = true;
 };
 
-/** 點擊【重設彈跳視窗】 */
+/** 點擊【重設彈跳視窗】 */ 
 const clickResetDialog = () => {
   dialog.value.goodsDialogVisible = false;
   dialog.value.IsEditMode = false;
   goodsForm.value = {
-    Name:
-      '',
+    Name: 
+    '',
     Show: true,
     GoodsTypeID: 1,
     SpecsAllowance: 2,
@@ -83,7 +90,7 @@ const clickResetDialog = () => {
   };
 };
 
-/** 點擊【儲存】 */
+/** 點擊【儲存】 */ 
 const clickSave = async (formData) => {
   try {
     const apiFn = dialog.value.IsEditMode ? updateGoods : addGoods;
@@ -100,22 +107,6 @@ const clickSave = async (formData) => {
     console.error('操作商品發生錯誤:', error);
     ElMessage.error('系統錯誤，請稍後再試');
   }
-};
-
-// 重置彈跳視窗
-const resetDialog = () => {
-  dialog.value.goodsDialogVisible = false;
-  dialog.value.IsEditMode = false;
-  goodsForm.value = {
-    Name: '',
-    Show: true,
-    GoodsTypeID: 1,
-    SpecsAllowance: 2,
-    GoodsSpecs: [{ Specs: '' }],
-    UnitPrice: 0,
-    ImagesIdnet: [],   // 用陣列
-    Description: ''
-  };
 };
 
 

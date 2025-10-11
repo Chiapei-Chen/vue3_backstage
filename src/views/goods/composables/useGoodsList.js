@@ -13,8 +13,6 @@ export function useGoodsList() {
     GoodsType: ''
   });
 
-  /** 注意，有預設值的關線，不要直接把這個MODEL當成UI綁定對象 */
-
   const searchForm = ref({
     ID: 0,
     GoodsName: '',
@@ -36,6 +34,7 @@ export function useGoodsList() {
     Show: true,
     GoodsTypeID: 0,
     Name: '',
+    
     SpecsAllowance: 0,
     GoodsSpecs: [],
     UnitPrice: 0,
@@ -57,6 +56,11 @@ export function useGoodsList() {
     console.log('### GOODS TYPE RES: ', goodsTypeList.value);
   };
 
+
+  const getGoodsTypeName = (typeId) => {
+    const match = goodsTypeList.value.find(item => item.ID == typeId);
+    return match.Name;
+  }
   /** Goods list request */
 
   const getGoodsListRequest = async (postData, useLastSearchForm = false) => {
@@ -95,6 +99,7 @@ export function useGoodsList() {
     goodsForm,
     goodsTypeList,
     getGoodsListRequest,
-    getGoodsTypeList
+    getGoodsTypeList,
+    getGoodsTypeName
   };
 }

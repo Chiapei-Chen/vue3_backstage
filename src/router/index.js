@@ -47,9 +47,7 @@ const router = createRouter({
                 title: 'Goods List',
                 header: 'Goods List'
               }
-            }
-          ],
-          children: [
+            },
             {
               path: 'goods-type-list',
               name: 'GoodsTypeList',
@@ -60,8 +58,18 @@ const router = createRouter({
                 header: 'Goods Type List'
               }
             }
-          ]
+          ],
         },
+        {
+          path:'/admin',
+          name:'Admin',
+          component:()=>import('@/views/admin/Admin.vue'),
+          meta:{
+            requiresAuth:true,
+            title:'Admin',
+            header:'Admin'
+          }
+        }
         // 其他後台管理系統相關頁面都會放在這
       ]
     },
@@ -91,8 +99,8 @@ router.beforeEach((to, from, next) => {
   }
 })
 
-router.afterEach((to)=>{
-  document.title=to.meta.title||'後台管理'
- });
+router.afterEach((to) => {
+  document.title = to.meta.title || '後台管理'
+});
 
 export default router
