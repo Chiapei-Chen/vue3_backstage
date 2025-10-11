@@ -29,6 +29,10 @@
     </el-table>
   </div>
   <!-- 新增商品&編輯商品 Dialog -->
+  <GoodsAddModal v-model:visible="showAddDialog" :goodsTypeList="goodsTypeList" @confirm="handleAddConfirm" />
+
+  <GoodsEditModal v-model:visible="showEditDialog" :editData="editForm" :goodsTypeList="goodsTypeList"
+    @confirm="handleEditConfirm" />
   <CreateEditGoods v-model="dialog.goodsDialogVisible" v-model:formModel="goodsForm" :isEdit="dialog.IsEditMode"
     @confirm="handleSaveGoods" @close="resetDialog" />
 </template>
@@ -36,7 +40,8 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue';
 import { useGoodsList } from './composables';
-import CreateEditGoods from './components/dialog/CreateEditGoods.vue';
+import GoodsAddModal from './components/GoodsAddModal.vue';
+import GoodsEditModal from './components/GoodsAddModal.vue';
 import { addGoods, updateGoods } from '@/service/api';
 import { ElMessage } from 'element-plus';
 
@@ -61,8 +66,25 @@ const openEditDialog = (row) => {
   dialog.value.IsEditMode = true;
 };
 
-// 儲存商品
-const handleSaveGoods = async (formData) => {
+/** 點擊【重設彈跳視窗】 */
+const clickResetDialog = () => {
+  dialog.value.goodsDialogVisible = false;
+  dialog.value.IsEditMode = false;
+  goodsForm.value = {
+    Name:
+      '',
+    Show: true,
+    GoodsTypeID: 1,
+    SpecsAllowance: 2,
+    GoodsSpecs: [{ Specs: '' }],
+    UnitPrice: 0,
+    ImagesIdnet: [],   // 用陣列
+    Description: ''
+  };
+};
+
+/** 點擊【儲存】 */
+const clickSave = async (formData) => {
   try {
     const apiFn = dialog.value.IsEditMode ? updateGoods : addGoods;
     const res = await apiFn(formData);

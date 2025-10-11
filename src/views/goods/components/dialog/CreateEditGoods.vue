@@ -13,8 +13,10 @@
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item label="商品分類 ID" prop="GoodsTypeID">
-        <el-input-number v-model="formModel.GoodsTypeID" :min="1" />
+      <el-form-item label="商品分類" prop="GoodsTypeID">
+        <el-select v-model="formModel.GoodsTypeID">請選擇商品分類
+          <el-option v-for="item in goodsTypeList" :key="item.ID" :label="item.Name" :value="item.ID"></el-option>
+        </el-select>
       </el-form-item>
 
       <el-form-item label="是否允許規格" prop="SpecsAllowance">
