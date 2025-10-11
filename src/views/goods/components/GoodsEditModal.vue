@@ -27,33 +27,7 @@
           />
         </el-select>
       </el-form-item>
-
-      <el-form-item label="是否允許規格" prop="SpecsAllowance">
-        <el-radio-group v-model="formModel.SpecsAllowance">
-          <el-radio-button :value="1">允許</el-radio-button>
-          <el-radio-button :value="0">不允許</el-radio-button>
-          <el-radio-button :value="2">依照規格陣列</el-radio-button>
-        </el-radio-group>
-      </el-form-item>
-
-      <el-form-item v-if="formModel.SpecsAllowance === 2" label="商品規格">
-        <div
-          v-for="(spec, index) in formModel.GoodsSpecs"
-          :key="index"
-          class="spec-row"
-        >
-          <el-input
-            v-model="spec.Specs"
-            placeholder="請輸入規格內容"
-            class="w-3/4"
-          />
-          <el-button type="danger" @click="removeSpec(formModel, index)">刪除</el-button>
-        </div>
-        <el-button type="primary" @click="addSpec(formModel)" class="mt-2">
-          新增規格
-        </el-button>
-      </el-form-item>
-
+      
       <el-form-item label="商品價格" prop="UnitPrice">
         <el-input-number v-model="formModel.UnitPrice" :min="0" />
       </el-form-item>
@@ -84,9 +58,6 @@ import { ElMessage } from 'element-plus'
 import { useGoodsForm } from '../composables/useGoodsForm'
 import { updateGoods } from '@/service/api'
 
-/* ----------------------
-  Props & Emits
------------------------ */
 const props = defineProps({
   width: { type: [String, Number], default: 500 },
   goodsTypeList: { type: Array, default: () => [] },
@@ -95,25 +66,9 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'confirm'])
 const dialogVisible = defineModel('visible', { default: false })
-
-/* ----------------------
-  Form 初始化
------------------------ */
 const { formRef, formRules, getEmptyForm, addSpec, removeSpec } = useGoodsForm()
 const formModel = ref(getEmptyForm())
-
-// 監聽外部傳入的 editData，自動更新表單內容
-watch(
-  () => props.editData,
-  (val) => {
-    formModel.value = JSON.parse(JSON.stringify(val || getEmptyForm()))
-  },
-  { immediate: true, deep: true }
-)
-
-/* ----------------------
-  Methods
------------------------ */
+//-----------------------------------------------------------------------------------------------
 /** 點擊【提交】 */
 const clickSubmit = async () => {
   try {
@@ -133,4 +88,14 @@ const clickSubmit = async () => {
     ElMessage.error('系統錯誤，請稍後再試')
   }
 }
+
+// 監聽外部傳入的 editData，自動更新表單內容
+watch(
+  () => props.editData,
+  (val) => {
+    formModel.value = JSON.parse(JSON.stringify(val || getEmptyForm()))
+  },
+  { immediate: true, deep: true }
+)
+
 </script>
