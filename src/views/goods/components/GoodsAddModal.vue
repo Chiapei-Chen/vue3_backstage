@@ -33,7 +33,7 @@
 
     <template #footer>
       <el-button @click="emit('close')">取消</el-button>
-      <el-button type="success" @click="clickSubmit">新增</el-button>
+      <el-button type="success" @click="clickSubmit">確認</el-button>
     </template>
   </el-dialog>
 </template>
