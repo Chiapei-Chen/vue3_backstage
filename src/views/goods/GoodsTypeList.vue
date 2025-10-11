@@ -1,75 +1,91 @@
 <template>
-    <div class="p-3 bg-white rounded">
-        <el-button type="primary" plain icon="Plus" @click="dialog.goodsTypeDialogVisible=true">新增商品分類</el-button>
-
-        <el-table :data="tableData" stripe v-loading="tableLoading" class="my-3">
-            <el-table-column prop="ID" label="ID" width="80" />
-            <el-table-column prop="Name" label="分類名稱" />
-            <el-table-column label="操作" width="100">
-                <template #default="{ row }">
-                    <el-button type="primary" size="small" @click="openEditDialog(row)">編輯</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
+  <div>
+    <!-- 搜尋與新增按鈕 -->
+    <div class="flex justify-between p-3 bg-white rounded">
+      <div>
+        <el-input v-model="searchKeyword" placeholder="搜尋分類名稱" clearable />
+        <el-button type="primary" icon="Search" @click="getGoodsTypeList">搜尋</el-button>
+      </div>
+      <el-button
+        class="btn--create"
+        plain
+        icon="Plus"
+        @click="showAddDialog = true"
+      >
+        新增分類
+      </el-button>
     </div>
-    <!-- 彈跳視窗 -->
-    <CreateEditGoodsType v-model="dialog.goodsTypeDialogVisible" 
-    v-model:formModel="goodsTypeForm"
-    :isEdit="dialog.IsEditMode"
-     @confirm="handleSaveGoodsType" @close="resetDialog" />
+
+    <!-- 表格 -->
+    <el-table :data="tableData" style="width: 100%" v-loading="loading">
+      <el-table-column prop="ID" label="ID" width="80" />
+      <el-table-column prop="Name" label="分類名稱" />
+      <el-table-column label="操作" width="160">
+        <template #default="{ row }">
+          <el-button size="small" @click="openEditDialog(row)">編輯</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+
+    <!-- 新增 Dialog -->
+    <GoodsTypeAddModal
+      v-model:visible="showAddDialog"
+      @confirm="onAddSuccess"
+      @close="showAddDialog = false"
+    />
+
+    <!-- 編輯 Dialog -->
+    <GoodsTypeEditModal
+      v-model:visible="showEditDialog"
+      :editData="editForm"
+      @confirm="onEditSuccess"
+      @close="showEditDialog = false"
+    />
+  </div>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted, nextTick } from 'vue';
-import CreateEditGoodsType from './components/dialog/CreateEditGoodsType.vue';
-import { useGoodsTypeList } from '@/views/goods/composables/useGoodsTypeList';
-import { addGoodsType, updateGoodsType } from '@/service/api';
-import { ElMessage } from 'element-plus';
+<script setup>
+import { ref, onMounted } from 'vue'
+import { getGoodsType } from '@/service/api'
+import { ElMessage } from 'element-plus'
+import GoodsTypeAddModal from './components/GoodsTypeAddModal.vue'
+import GoodsTypeEditModal from './components/GoodsTypeEditModal.vue'
 
-const {
-    tableData,
-    tableLoading,
-    goodsTypeForm,
-    getGoodsTypeTableList,
-} = useGoodsTypeList();
+const tableData = ref([])
+const loading = ref(false)
+const searchKeyword = ref('')
+const showAddDialog = ref(false)
+const showEditDialog = ref(false)
+const editForm = ref({})
 
-const dialog = ref({
-    goodsTypeDialogVisible: false,
-    IsEditMode: false,
-});
-
-const openEditDialog = (row: any) => {
-    goodsTypeForm.value = { ...row };
-    dialog.value.goodsTypeDialogVisible = true;
-    dialog.value.IsEditMode = true;
-};
-
-const handleSaveGoodsType = async (formData: any) => {
-    try {
-        const apiFn = dialog.value.IsEditMode ? updateGoodsType : addGoodsType;
-        const res = await apiFn(formData);
-        if (res.data?.Code === 200) {
-            ElMessage.success(dialog.value.IsEditMode ? '更新成功' : '新增成功');
-            dialog.value.goodsTypeDialogVisible = false;
-            dialog.value.IsEditMode = false;
-            getGoodsTypeTableList();
-        } else {
-            ElMessage.error(res.data.Message || '操作失敗');
-        }
-    } catch (error) {
-       console.error('操作商品發生錯誤:', error);
-     ElMessage.error('系統錯誤，請稍後再試');
+const getGoodsTypeList = async () => {
+  loading.value = true
+  try {
+    const res = await getGoodsType({})
+    if (res?.data?.Code === 200) {
+      tableData.value = res.data.Data
     }
-};
+  } finally {
+    loading.value = false
+  }
+}
 
-const resetDialog = () => {
-    dialog.value.goodsTypeDialogVisible = false;
-    dialog.value.IsEditMode = false;
-    goodsTypeForm.value = { ID: null, Name: '', Show: true };
-};
+const openEditDialog = (row) => {
+  editForm.value = { ...row }
+  showEditDialog.value = true
+}
 
-onMounted(async () => {
-    await nextTick();
-    getGoodsTypeTableList();
-});
+const onAddSuccess = () => {
+  ElMessage.success('新增成功')
+  getGoodsTypeList()
+}
+
+const onEditSuccess = () => {
+  ElMessage.success('更新成功')
+  getGoodsTypeList()
+}
+
+onMounted(() => {
+  getGoodsTypeList()
+})
 </script>
