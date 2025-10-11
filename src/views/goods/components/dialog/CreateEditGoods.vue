@@ -14,7 +14,6 @@
 
       <el-form-item label="商品分類" prop="GoodsTypeID">
         <el-select v-model="formModel.GoodsTypeID">請選擇商品分類
-          <!-- <el-option :label="請選擇"  :value="0">請選擇商品分類</el-option> -->
           <el-option v-for="item in goodsTypeList" :key="item.ID" :label="item.Name" :value="item.ID"></el-option>
         </el-select>
       </el-form-item>

@@ -59,6 +59,7 @@ export function useGoodsList() {
 
   const getGoodsTypeName = (typeId) => {
     const match = goodsTypeList.value.find(item => item.ID == typeId);
+    console.log(match);
     return match.Name;
   }
   /** Goods list request */
