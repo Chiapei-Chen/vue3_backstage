@@ -7,37 +7,21 @@
       </div>
       <div class="w-[180px]">
         <el-select v-model="searchFilter.GoodsType" placeholder="選擇分類" clearable>
-          <el-option
-            v-for="item in goodsTypeList"
-            :key="item.ID"
-            :label="item.Name"
-            :value="item.ID"
-          />
+          <el-option v-for="item in goodsTypeList" :key="item.ID" :label="item.Name" :value="item.ID" />
         </el-select>
       </div>
       <el-button type="primary" icon="Search" @click="getGoodsListRequest(searchFilter, false)">
         搜尋
       </el-button>
     </div>
-    <el-button
-      class="btn--create"
-      plain
-      icon="Plus"
-      @click="showAddDialog = true"
-    >
+    <el-button type="success" icon="Plus" @click="showAddDialog = true">
       新增商品
     </el-button>
   </div>
 
   <!--表格內容-->
   <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
-    <el-table
-      :data="tableData"
-      flexible
-      stripe
-      style="width: 100%"
-      v-loading="tableLoading"
-    >
+    <el-table :data="tableData" flexible stripe style="width: 100%" v-loading="tableLoading">
       <el-table-column prop="ID" label="ID" width="100" />
       <el-table-column label="商品分類">
         <template #default="{ row }">
@@ -56,21 +40,12 @@
   </div>
 
   <!-- 新增商品 -->
-  <GoodsAddModal
-    v-model:visible="showAddDialog"
-    :goodsTypeList="goodsTypeList"
-    @confirm="onAddSuccess"
-    @close="showAddDialog = false"
-  />
+  <GoodsAddModal v-model:visible="showAddDialog" :goodsTypeList="goodsTypeList" @confirm="onAddSuccess"
+    @close="showAddDialog = false" />
 
   <!-- 編輯商品 -->
-  <GoodsEditModal
-    v-model:visible="showEditDialog"
-    :editData="editForm"
-    :goodsTypeList="goodsTypeList"
-    @confirm="onEditSuccess"
-    @close="showEditDialog = false"
-  />
+  <GoodsEditModal v-model:visible="showEditDialog" :editData="editForm" :goodsTypeList="goodsTypeList"
+    @confirm="onEditSuccess" @close="showEditDialog = false" />
 </template>
 
 <script setup>
