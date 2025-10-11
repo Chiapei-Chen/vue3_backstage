@@ -18,14 +18,6 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="是否允許規格" prop="SpecsAllowance">
-        <el-radio-group v-model="formModel.SpecsAllowance">
-          <el-radio-button :value="1">允許</el-radio-button>
-          <el-radio-button :value="0">不允許</el-radio-button>
-          <el-radio-button :value="2">依照規格陣列</el-radio-button>
-        </el-radio-group>
-      </el-form-item>
-
       <el-form-item v-if="formModel.SpecsAllowance === 2" label="商品規格">
         <div v-for="(spec, index) in formModel.GoodsSpecs" :key="index" class="spec-row">
           <el-input v-model="spec.Specs" placeholder="請輸入規格內容" class="w-3/4" />
@@ -49,14 +41,16 @@
 
     <template #footer>
       <el-button @click="emit('close')">取消</el-button>
-      <el-button type="primary" @click="clickSubmit">儲存修改</el-button>
+      <el-button type="success" @click="clickSubmit">確認修改</el-button>
     </template>
   </el-dialog>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue'
-import { useGoodsForm } from './useGoodsForm.js'
+import { ElMessage } from 'element-plus'
+import { useGoodsForm } from '../composables/useGoodsForm'
+import { updateGoods } from '@/service/api'
 
 const props = defineProps({
   width: { type: [String, Number], default: 500 },
