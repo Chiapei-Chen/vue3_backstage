@@ -1,0 +1,6 @@
+/* main.css */
+@import "tailwindcss";
+
+@import "./styles/token/color-token.css";
+@import "./styles/token/color-semantic-token.css";
+@import "./styles/components/button.css";

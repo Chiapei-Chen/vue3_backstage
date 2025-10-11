@@ -1,0 +1,14 @@
+:root {
+    /* Backgrounds */
+    --color-bg-page: var(--color-gray-50);
+    --color-bg-card: var(--color-gray-500);
+
+    /* Text */
+    --color-text-primary: var(--color-gray-600);
+    --color-text-secondary: var(--color-gray-500);
+
+    /* Buttons */
+    --color-btn-primary-bg: var(--color-brand-blue-500);
+    --color-btn-primary-text: var(--color-brand-blue-50);
+    --color-btn-primary-hover: var(--color-brand-blue-50);
+}

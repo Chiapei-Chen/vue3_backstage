@@ -82,7 +82,13 @@ const menuItems = reactive([
   {
     title: '管理員設定',
     icon: 'Tools',
-    index: 'Admin-1'
+    index: 'Admin-1',
+    children:[
+      {
+        title:'管理員列表',
+        path:'/admin'
+      }
+    ]
   }
 ]);
 

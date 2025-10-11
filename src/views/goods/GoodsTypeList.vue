@@ -15,8 +15,8 @@
     <!-- 彈跳視窗 -->
     <CreateEditGoodsType v-model="dialog.goodsTypeDialogVisible" 
     v-model:formModel="goodsTypeForm"
-    :isEdit="dialog.IsEditMode"
-     @confirm="handleSaveGoodsType" @close="resetDialog" />
+    :isEdit="dialog.isEditMode"
+     @confirm="clickSave" @close="clickResetDialog" />
 </template>
 
 <script setup lang="ts">
@@ -33,25 +33,35 @@ const {
     getGoodsTypeTableList,
 } = useGoodsTypeList();
 
+// 彈跳視窗
 const dialog = ref({
     goodsTypeDialogVisible: false,
-    IsEditMode: false,
+    isEditMode: false,
 });
 
+/** 點擊【開啟編輯彈跳視窗】 */
 const openEditDialog = (row: any) => {
     goodsTypeForm.value = { ...row };
     dialog.value.goodsTypeDialogVisible = true;
-    dialog.value.IsEditMode = true;
+    dialog.value.isEditMode = true;
 };
 
-const handleSaveGoodsType = async (formData: any) => {
+/** 點擊【重設彈跳視窗】 */
+const clickResetDialog = () => {
+    dialog.value.goodsTypeDialogVisible = false;
+    dialog.value.isEditMode = false;
+    goodsTypeForm.value = { ID: null, Name: '', Show: true };
+};
+
+/** 點擊【儲存】 */
+const clickSave = async (formData: any) => {
     try {
-        const apiFn = dialog.value.IsEditMode ? updateGoodsType : addGoodsType;
+        const apiFn = dialog.value.isEditMode ? updateGoodsType : addGoodsType;
         const res = await apiFn(formData);
         if (res.data?.Code === 200) {
-            ElMessage.success(dialog.value.IsEditMode ? '更新成功' : '新增成功');
+            ElMessage.success(dialog.value.isEditMode ? '更新成功' : '新增成功');
             dialog.value.goodsTypeDialogVisible = false;
-            dialog.value.IsEditMode = false;
+            dialog.value.isEditMode = false;
             getGoodsTypeTableList();
         } else {
             ElMessage.error(res.data.Message || '操作失敗');
@@ -60,12 +70,6 @@ const handleSaveGoodsType = async (formData: any) => {
        console.error('操作商品發生錯誤:', error);
      ElMessage.error('系統錯誤，請稍後再試');
     }
-};
-
-const resetDialog = () => {
-    dialog.value.goodsTypeDialogVisible = false;
-    dialog.value.IsEditMode = false;
-    goodsTypeForm.value = { ID: null, Name: '', Show: true };
 };
 
 onMounted(async () => {
