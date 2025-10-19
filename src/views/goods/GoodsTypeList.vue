@@ -1,39 +1,35 @@
 <template>
-  <div class="p-5">
-    <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
-      <div class="flex items-center gap-2">
-        <div class="w-[140px]">
-          <el-input v-model="searchKeyword" placeholder="搜尋分類名稱" clearable />
-
-        </div>
+  <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
+    <!-- 搜尋-->
+    <div class="flex items-center gap-2">
+      <div class="w-[140px]">
+        <el-input v-model="searchKeyword" placeholder="輸入分類名稱" clearable />
       </div>
-
-      <el-button type="primary" icon="Search" @click="getGoodsTypeList">搜尋</el-button>
-      <el-button class="btn--create" plain icon="Plus" @click="showAddDialog = true">
-        新增分類
-      </el-button>
+      <el-button type="warning" icon="Search" @click="getGoodsTypeList">搜尋</el-button>
     </div>
-
-    <!--表格內容-->
-    <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
-      <el-table :data="tableData" style="width: 100%" v-loading="loading">
-        <el-table-column prop="ID" label="ID" width="80" />
-        <el-table-column prop="Name" label="分類名稱" />
-        <el-table-column label="操作" width="160">
-          <template #default="{ row }">
-            <el-button size="small" @click="clickOpenEditModal(row)">編輯</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-
-      <!-- 新增 Dialog -->
-      <GoodsTypeAddModal v-model:visible="showAddDialog" @confirm="handleAddSuccess" @close="showAddDialog = false" />
-
-      <!-- 編輯 Dialog -->
-      <GoodsTypeEditModal v-model:visible="showEditDialog" :editData="editForm" @confirm="handleEditSuccess"
-        @close="showEditDialog = false" />
-    </div>
+    <el-button class="btn--create" plain icon="Plus" @click="showAddDialog = true">
+      新增分類
+    </el-button>
   </div>
+
+  <!--表格內容-->
+  <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
+    <el-table :data="tableData" style="width: 100%" v-loading="loading">
+      <el-table-column prop="ID" label="ID" width="80" />
+      <el-table-column prop="Name" label="分類名稱" />
+      <el-table-column label="操作" width="160">
+        <template #default="{ row }">
+          <el-button size="small" @click="openEditDialog(row)">編輯</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
+
+  <!-- 新增商品類別Modal -->
+  <GoodsTypeAddModal v-model:visible="showAddDialog" @confirm="onAddSuccess" @close="showAddDialog = false" />
+  <!-- 編輯商品類別Modal -->
+  <GoodsTypeEditModal v-model:visible="showEditDialog" :editData="editForm" @confirm="onEditSuccess"
+    @close="showEditDialog = false" />
 </template>
 
 <script setup>

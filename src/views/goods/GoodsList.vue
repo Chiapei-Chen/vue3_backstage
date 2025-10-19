@@ -16,6 +16,7 @@
           搜尋
         </el-button>
       </div>
+<<<<<<< HEAD
       <el-button class="btn--create" plain icon="Plus" @click="showAddModal = true">
         新增商品
       </el-button>
@@ -39,17 +40,51 @@
         </el-table-column>
       </el-table>
     </div>
+=======
+      <div class="w-[180px]">
+        <el-select v-model="searchFilter.GoodsType" placeholder="選擇分類" clearable>
+          <el-option v-for="item in goodsTypeList" :key="item.ID" :label="item.Name" :value="item.ID" />
+        </el-select>
+      </div>
+      <el-button type="primary" icon="Search" @click="getGoodsListRequest(searchFilter, false)">
+        搜尋
+      </el-button>
+    </div>
+    <el-button class="btn--create" plain icon="Plus" @click="showAddDialog = true">
+      新增商品
+    </el-button>
+  </div>
+
+  <!--表格內容-->
+  <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
+    <el-table :data="tableData" flexible stripe style="width: 100%" v-loading="tableLoading">
+      <el-table-column prop="ID" label="ID" width="100" />
+      <el-table-column label="商品分類">
+        <template #default="{ row }">
+          {{ getGoodsTypeName(row.GoodsTypeID) }}
+        </template>
+      </el-table-column>
+>>>>>>> master
 
   </div>
 <<<<<<< Updated upstream
 
   <!-- 新增商品 -->
+<<<<<<< HEAD
   <GoodsAddModal v-model:visible="showAddModal" :goodsTypeList="goodsTypeList" @confirm="handleAddSuccess"
     @close="showAddModal = false" />
 
   <!-- 編輯商品 -->
   <GoodsEditModal v-model:visible="showEditModal" :editData="editForm" :goodsTypeList="goodsTypeList"
     @confirm="handleEditSuccess" @close="showEditModal = false" />
+=======
+  <GoodsAddModal v-model:visible="showAddDialog" :goodsTypeList="goodsTypeList" @confirm="onAddSuccess"
+    @close="showAddDialog = false" />
+
+  <!-- 編輯商品 -->
+  <GoodsEditModal v-model:visible="showEditDialog" :editData="editForm" :goodsTypeList="goodsTypeList"
+    @confirm="onEditSuccess" @close="showEditDialog = false" />
+>>>>>>> master
 </template>
 
 <script setup>

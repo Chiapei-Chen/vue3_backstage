@@ -1,44 +1,48 @@
 <template>
-    <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
-        <!--搜尋-->
-        <div class="flex items-center gap-2">
-            <el-form :inline="true" :model="queryForm">
-                <el-form-item label="帳號">
-                    <el-input v-model="queryForm.Account" placeholder="輸入帳號" clearable />
-                </el-form-item>
-                <el-form-item label="姓名">
-                    <el-input v-model="queryForm.Name" placeholder="輸入姓名" clearable />
-                </el-form-item>
-                <el-button type="warning" icon="Search" @click="clickSearch">搜尋</el-button>
-            </el-form>
-        </div>
-        <el-button type="success" icon="Plus" @click="clickOpenAddDialog">新增管理員</el-button>
+  <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
+    <!--搜尋-->
+    <div class="flex items-center gap-2">
+      <el-form :inline="true" :model="queryForm">
+        <el-form-item label="帳號">
+          <el-input v-model="queryForm.Account" placeholder="輸入帳號" clearable />
+        </el-form-item>
+        <el-form-item label="姓名">
+          <el-input v-model="queryForm.Name" placeholder="輸入姓名" clearable />
+        </el-form-item>
+        <el-button type="warning" icon="Search" @click="clickSearch">搜尋</el-button>
+      </el-form>
     </div>
-    <!--表格內容-->
-    <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
-        <el-table :data="tableData" stripe v-loading="tableLoading">
-            <el-table-column prop="Account" label="帳號"></el-table-column>
-            <el-table-column prop="Name" label="姓名"></el-table-column>
-            <el-table-column prop="Email" label="信箱"> </el-table-column>
-            <el-table-column prop="Phone" label="電話"></el-table-column>
+    <el-button type="success" icon="Plus" @click="clickOpenAddDialog">
+      新增管理員
+    </el-button>
+  </div>
 
-            <el-table-column label="操作">
+  <!--表格內容-->
+  <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
+    <el-table :data="tableData" stripe v-loading="tableLoading">
+      <el-table-column prop="Account" label="帳號"></el-table-column>
+      <el-table-column prop="Name" label="姓名"></el-table-column>
+      <el-table-column prop="Email" label="信箱"> </el-table-column>
+      <el-table-column prop="Phone" label="電話"></el-table-column>
 
-                <template #default="{ row }">
-                    <el-button type="primary" size="small" @click="clickOpenEditDialog(row)">編輯</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
-    </div>
-    <PermissionAddModal v-model="addDialogVisible" v-model:formModel="addForm"
-        :permissionTableData="permissionTableData" @confirm="handleAddConfirm" @close="addDialogVisible = false" />
+      <el-table-column label="操作">
+        <template #default="{ row }">
+          <el-button type="primary" size="small" @click="clickOpenEditDialog(row)">編輯</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </div>
 
-    <PermissionEditModal v-model="editDialogVisible" v-model:formModel="editForm"
-        :permissionTableData="permissionTableData" @confirm="handleEditConfirm" @close="editDialogVisible = false" />
-
-    <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
-        v-model:current-page="pagination.currentPage" v-model:page-size="pagination.pageSize"
-        :page-sizes="[10, 20, 50, 100]" />
+  <!--權限新增Modal-->
+  <PermissionAddModal v-model="addDialogVisible" v-model:formModel="addForm" :permissionTableData="permissionTableData"
+    @confirm="handleAddConfirm" @close="addDialogVisible = false" />
+  <!--權限編輯Modal-->
+  <PermissionEditModal v-model="editDialogVisible" v-model:formModel="editForm"
+    :permissionTableData="permissionTableData" @confirm="handleEditConfirm" @close="editDialogVisible = false" />
+  <!-- 分頁 -->
+  <el-pagination background layout="total, sizes, prev, pager, next, jumper" :total="pagination.total"
+    v-model:current-page="pagination.currentPage" v-model:page-size="pagination.pageSize"
+    :page-sizes="[10, 20, 50, 100]" />
 </template>
 
 <script setup lang="ts">
