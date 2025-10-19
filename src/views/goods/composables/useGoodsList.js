@@ -45,7 +45,7 @@ export function useGoodsList() {
   const goodsTypeList = ref([]);
 
   /** Goods Type List request */
-
+  /** 獲取【商品類型】列表 */
   const getGoodsTypeList = async () => {
     const [err, res] = await to(getGoodsType({}));
     if (res.data.Code !== 200) {
@@ -56,11 +56,10 @@ export function useGoodsList() {
     console.log('### GOODS TYPE RES: ', goodsTypeList.value);
   };
 
-
+  /** 獲取【商品類型】名 */
   const getGoodsTypeName = (typeId) => {
     const match = goodsTypeList.value.find(item => item.ID == typeId);
-    console.log(match);
-    return match.Name;
+    return match?.Name;
   }
   /** Goods list request */
 
