@@ -12,7 +12,8 @@ export function useGoodsList() {
     GoodsName: '',
     GoodsType: ''
   });
-
+ 
+  /** 真正送出搜尋參數 */
   const searchForm = ref({
     ID: 0,
     GoodsName: '',
@@ -22,11 +23,25 @@ export function useGoodsList() {
   // 紀錄上一次成功搜尋的參數
   const lastSearchForm = ref({ ...searchForm.value });
 
+  /** 分頁資料 */
   const pagination = ref({
-    currentPage: 0,
-    pageSize: 20,
+    currentPage: 1,
+    pageSize: 10,
     total: 0
   });
+
+  /** 換頁事件 */
+  const handlePageChange = (page) => {
+    pagination.value.currentPage = page;
+    getGoodsListRequest(searchFilter.value, false);
+  };
+
+  /** 切換每頁筆數事件 */
+  const handlePageSizeChange = (size) => {
+    pagination.value.pageSize = size;
+    pagination.value.currentPage = 1; // 重設回第一頁
+    getGoodsListRequest(searchFilter.value, false);
+  };
 
   /** 新增與編輯商品用的表單 */
   const goodsForm = ref({
@@ -34,7 +49,7 @@ export function useGoodsList() {
     Show: true,
     GoodsTypeID: 0,
     Name: '',
-    
+
     SpecsAllowance: 0,
     GoodsSpecs: [],
     UnitPrice: 0,
@@ -44,7 +59,6 @@ export function useGoodsList() {
 
   const goodsTypeList = ref([]);
 
-  /** Goods Type List request */
   /** 獲取【商品類型】列表 */
   const getGoodsTypeList = async () => {
     const [err, res] = await to(getGoodsType({}));
@@ -58,18 +72,17 @@ export function useGoodsList() {
 
   /** 獲取【商品類型】名 */
   const getGoodsTypeName = (typeId) => {
-    const match = goodsTypeList.value.find(item => item.ID == typeId);
-    return match?.Name;
+    const goodsTypeName = goodsTypeList.value.find(item => item.ID == typeId);
+    return goodsTypeName?.Name;
   }
-  /** Goods list request */
 
+  /** 獲取【商品列表】 */
   const getGoodsListRequest = async (postData, useLastSearchForm = false) => {
     tableLoading.value = true;
     postData ? (searchForm.value = { ...postData }) : searchForm.value;
 
     const currentFilter = useLastSearchForm ? lastSearchForm.value : searchForm.value;
 
-    /** 一定要有預設值，ID和TYPE沒給值的部分就轉為 0 */
     const requestData = {
       ID: currentFilter.ID || 0,
       GoodsName: currentFilter.GoodsName || '',
@@ -86,9 +99,11 @@ export function useGoodsList() {
       console.error(err);
       return;
     }
+    console.log("### totalCount: ", typeof(res.data.TotalCount));
 
     tableData.value = res.data.Data;
     lastSearchForm.value = { ...searchForm.value };
+    pagination.value.total = res.data.TotalCount || 0;
     console.log('### GOODS LIST RES: ', tableData.value);
   };
 
@@ -98,6 +113,9 @@ export function useGoodsList() {
     tableLoading,
     goodsForm,
     goodsTypeList,
+    pagination,
+    handlePageChange,
+    handlePageSizeChange,
     getGoodsListRequest,
     getGoodsTypeList,
     getGoodsTypeName
