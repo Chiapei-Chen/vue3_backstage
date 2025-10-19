@@ -28,15 +28,15 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="是否允許規格" prop="SpecsAllowance">
+      <!-- <el-form-item label="是否允許規格" prop="SpecsAllowance">
         <el-radio-group v-model="formModel.SpecsAllowance">
           <el-radio-button :value="1">允許</el-radio-button>
           <el-radio-button :value="0">不允許</el-radio-button>
           <el-radio-button :value="2">依照規格陣列</el-radio-button>
         </el-radio-group>
-      </el-form-item>
+      </el-form-item> -->
 
-      <el-form-item v-if="formModel.SpecsAllowance === 2" label="商品規格">
+      <!-- <el-form-item v-if="formModel.SpecsAllowance === 2" label="商品規格">
         <div v-for="(spec, index) in formModel.GoodsSpecs" :key="index" class="spec-row">
           <el-input
             v-model="spec.Specs"
@@ -46,7 +46,7 @@
           <el-button type="danger" @click="removeSpec(formModel, index)">刪除</el-button>
         </div>
         <el-button type="primary" @click="addSpec(formModel)" class="mt-2">新增規格</el-button>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item label="商品價格" prop="UnitPrice">
         <el-input-number v-model="formModel.UnitPrice" :min="0" />

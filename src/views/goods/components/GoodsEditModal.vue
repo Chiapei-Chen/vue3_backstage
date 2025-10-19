@@ -28,7 +28,7 @@
         </el-select>
       </el-form-item>
 
-      <el-form-item label="是否允許規格" prop="SpecsAllowance">
+      <!-- <el-form-item label="是否允許規格" prop="SpecsAllowance">
         <el-radio-group v-model="formModel.SpecsAllowance">
           <el-radio-button :value="1">允許</el-radio-button>
           <el-radio-button :value="0">不允許</el-radio-button>
@@ -52,7 +52,7 @@
         <el-button type="primary" @click="addSpec(formModel)" class="mt-2">
           新增規格
         </el-button>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item label="商品價格" prop="UnitPrice">
         <el-input-number v-model="formModel.UnitPrice" :min="0" />
@@ -73,7 +73,7 @@
 
     <template #footer>
       <el-button @click="emit('close')">取消</el-button>
-      <el-button type="primary" @click="clickSubmit">儲存修改</el-button>
+      <el-button type="success" @click="clickSubmit">儲存修改</el-button>
     </template>
   </el-dialog>
 </template>
