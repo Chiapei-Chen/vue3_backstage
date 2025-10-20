@@ -34,7 +34,7 @@
 
     <template #footer>
       <el-button @click="clickClose">取消</el-button>
-      <el-button type="success" @click="clickSubmit">確認</el-button>
+      <el-button type="success" @click="clickSubmit">新增送出</el-button>
     </template>
   </el-dialog>
 </template>
