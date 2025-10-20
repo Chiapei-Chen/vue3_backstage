@@ -10,7 +10,7 @@
       <div class="w-[180px]">
         <el-input v-model="searchFilter.GoodsName" placeholder="輸入商品名稱" clearable />
       </div>
-      <el-button type="warning" icon="Search" @click="getGoodsList(searchFilter, false)">
+      <el-button type="warning" icon="Search" @click="getGoodsListReq(searchFilter, false)">
         搜尋
       </el-button>
     </div>
@@ -77,7 +77,7 @@ const {
   handlePageChange,
   handlePageSizeChange,
   getGoodsTypeName,
-  getGoodsList,
+  getGoodsListReq,
   getGoodsTypeList,
 } = useGoodsList()
 
@@ -94,21 +94,21 @@ const clickOpenEditModal = (row) => {
 /** 處理【新增】成功 */
 const handleAddSuccess = () => {
   ElMessage.success('已新增商品')
-  showAddModal.value = false
-  getGoodsList({}, false)
+  showAddDialog.value = false
+  getGoodsListReq({}, false)
 }
 
 /** 處理【編輯】成功 */
 const handleEditSuccess = () => {
   ElMessage.success('已更新商品')
-  showEditModal.value = false
-  getGoodsList({}, false)
+  showEditDialog.value = false
+  getGoodsListReq({}, false)
 }
 
 // ---------------------------------------------------------------------------------
 onMounted(async () => {
   await nextTick()
   getGoodsTypeList()
-  getGoodsList({}, false)
+  getGoodsListReq({}, false)
 })
 </script>
