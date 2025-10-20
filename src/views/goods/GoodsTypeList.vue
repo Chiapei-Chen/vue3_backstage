@@ -14,22 +14,33 @@
 
   <!--表格內容-->
   <div class="flex items-end justify-between p-3 my-3 bg-white rounded bd-1">
-    <el-table :data="tableData" style="width: 100%" v-loading="loading">
-      <el-table-column prop="ID" label="ID" width="80" />
+    <el-table :data="tableData" style="width: 100%" v-loading="tableLoading">
+      <el-table-column label="#" width="80">
+        <template #default="{ $index }">
+          {{ (pagination.currentPage - 1) * pagination.pageSize + ($index + 1) }}
+        </template>
+      </el-table-column>
       <el-table-column prop="Name" label="分類名稱" />
       <el-table-column label="操作" width="160">
         <template #default="{ row }">
-          <el-button size="small" @click="openEditDialog(row)">編輯</el-button>
+          <el-button type="primary" size="small" @click="clickOpenEditModal(row)">編輯</el-button>
         </template>
       </el-table-column>
     </el-table>
   </div>
 
+  <div class="flex items-end justify-end p-3 my-3 rounded">
+    <!-- 分頁 -->
+    <el-pagination layout="total, sizes, prev, pager, next, jumper" :current-page="pagination.currentPage"
+      :page-size="pagination.pageSize" :page-sizes="[10, 50, 100]" :total="pagination.total"
+      @current-change="handlePageChange" @size-change="handlePageSizeChange" />
+  </div>
+
   <!-- 新增商品類別Modal -->
-  <GoodsTypeAddModal v-model:visible="showAddDialog" @confirm="onAddSuccess" @close="showAddDialog = false" />
+  <GoodsTypeAddModal v-model:visible="showAddModal" @confirm="handleAddSuccess" @close="showAddModal = false" />
   <!-- 編輯商品類別Modal -->
-  <GoodsTypeEditModal v-model:visible="showEditDialog" :editData="editForm" @confirm="onEditSuccess"
-    @close="showEditDialog = false" />
+  <GoodsTypeEditModal v-model:visible="showEditModal" :editData="editForm" @confirm="handleEditSuccess"
+    @close="showEditModal = false" />
 </template>
 
 <script setup>
@@ -40,13 +51,9 @@ import GoodsTypeAddModal from './components/GoodsTypeAddModal.vue'
 import GoodsTypeEditModal from './components/GoodsTypeEditModal.vue'
 
 const {
-  searchFilter,
   tableData,
   tableLoading,
-  goodsForm,
-  goodsTypeList,
-  getGoodsTypeName,
-  getGoodsListRequest,
+  pagination,
   getGoodsTypeList,
 } = useGoodsTypeList()
 
@@ -56,7 +63,7 @@ const editForm = ref({});
 //---------------------------------------------------------
 /** 點擊開啟【編輯】彈跳視窗 */
 const clickOpenEditModal = (row) => {
-  editForm.value = { ...row };
+  editForm.value = JSON.parse(JSON.stringify(row));
   showEditModal.value = true;
 }
 
@@ -72,7 +79,7 @@ const handleEditSuccess = () => {
   ElMessage.success('更新成功');
   getGoodsTypeList();
 };
-
+//---------------------------------------------------------
 onMounted(() => {
   getGoodsTypeList()
 })
