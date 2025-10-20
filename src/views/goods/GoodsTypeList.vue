@@ -34,44 +34,44 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { getGoodsType } from '@/service/api'
+import { useGoodsTypeList } from './composables'
 import { ElMessage } from 'element-plus'
 import GoodsTypeAddModal from './components/GoodsTypeAddModal.vue'
 import GoodsTypeEditModal from './components/GoodsTypeEditModal.vue'
 
-const tableData = ref([])
-const loading = ref(false)
-const searchKeyword = ref('')
-const showAddDialog = ref(false)
-const showEditDialog = ref(false)
-const editForm = ref({})
+const {
+  searchFilter,
+  tableData,
+  tableLoading,
+  goodsForm,
+  goodsTypeList,
+  getGoodsTypeName,
+  getGoodsListRequest,
+  getGoodsTypeList,
+} = useGoodsTypeList()
 
-const getGoodsTypeList = async () => {
-  loading.value = true
-  try {
-    const res = await getGoodsType({})
-    if (res?.data?.Code === 200) {
-      tableData.value = res.data.Data
-    }
-  } finally {
-    loading.value = false
-  }
+const showAddModal = ref(false);
+const showEditModal = ref(false);
+const editForm = ref({});
+//---------------------------------------------------------
+/** 點擊開啟【編輯】彈跳視窗 */
+const clickOpenEditModal = (row) => {
+  editForm.value = { ...row };
+  showEditModal.value = true;
 }
 
-const openEditDialog = (row) => {
-  editForm.value = { ...row }
-  showEditDialog.value = true
-}
+/** 處理【新增】成功 */
+const handleAddSuccess = () => {
+  ElMessage.success('新增成功');
+  showAddModal.value = false;
+  getGoodsTypeList();
+};
 
-const onAddSuccess = () => {
-  ElMessage.success('新增成功')
-  getGoodsTypeList()
-}
-
-const onEditSuccess = () => {
-  ElMessage.success('更新成功')
-  getGoodsTypeList()
-}
+/** 處理【編輯】成功 */
+const handleEditSuccess = () => {
+  ElMessage.success('更新成功');
+  getGoodsTypeList();
+};
 
 onMounted(() => {
   getGoodsTypeList()
