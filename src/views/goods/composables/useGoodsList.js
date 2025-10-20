@@ -12,7 +12,7 @@ export function useGoodsList() {
     GoodsName: '',
     GoodsType: ''
   });
- 
+
   /** 真正送出搜尋參數 */
   const searchForm = ref({
     ID: 0,
@@ -99,7 +99,7 @@ export function useGoodsList() {
       console.error(err);
       return;
     }
-    console.log("### totalCount: ", typeof(res.data.TotalCount));
+    console.log("### totalCount: ", typeof (res.data.TotalCount));
 
     tableData.value = res.data.Data;
     lastSearchForm.value = { ...searchForm.value };

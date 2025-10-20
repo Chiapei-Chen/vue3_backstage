@@ -14,7 +14,7 @@
         搜尋
       </el-button>
     </div>
-    <el-button class="btn--create" plain icon="Plus" @click="showAddDialog = true">
+    <el-button class="btn--create" plain icon="Plus" @click="showAddModal = true">
       新增商品
     </el-button>
   </div>
@@ -38,7 +38,7 @@
       <el-table-column prop="UnitPrice" label="價格" />
       <el-table-column label="操作" width="150">
         <template #default="{ row }">
-          <el-button type="primary" size="small" @click="openEditDialog(row)">編輯</el-button>
+          <el-button type="primary" size="small" @click="clickOpenEditModal(row)">編輯</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -52,12 +52,12 @@
   </div>
 
   <!-- 新增商品 -->
-  <GoodsAddModal v-model:visible="showAddDialog" :goodsTypeList="goodsTypeList" @confirm="onAddSuccess"
-    @close="showAddDialog = false" />
+  <GoodsAddModal v-model:visible="showAddModal" :goodsTypeList="goodsTypeList" @confirm="handleAddSuccess"
+    @close="showAddModal = false" />
 
   <!-- 編輯商品 -->
-  <GoodsEditModal v-model:visible="showEditDialog" :editData="editForm" :goodsTypeList="goodsTypeList"
-    @confirm="onEditSuccess" @close="showEditDialog = false" />
+  <GoodsEditModal v-model:visible="showEditModal" :editData="editForm" :goodsTypeList="goodsTypeList"
+    @confirm="handleEditSuccess" @close="showEditModal = false" />
 </template>
 
 <script setup>
@@ -81,29 +81,29 @@ const {
   getGoodsTypeList,
 } = useGoodsList()
 
-const showAddDialog = ref(false)
-const showEditDialog = ref(false)
+const showAddModal = ref(false)
+const showEditModal = ref(false)
 const editForm = ref({})
 
-const openEditDialog = (row) => {
-  editForm.value = JSON.parse(JSON.stringify(row))
-  showEditDialog.value = true
+/** 點擊開啟【編輯】彈跳視窗 */
+const clickOpenEditModal = (row) => {
+  editForm.value = JSON.parse(JSON.stringify(row));
+  showEditModal.value = true
 }
 
-/** 新增成功後處理 */
-const onAddSuccess = () => {
+/** 處理【新增】成功 */
+const handleAddSuccess = () => {
   ElMessage.success('已新增商品')
   showAddDialog.value = false
   getGoodsListReq({}, false)
 }
 
-/** 編輯成功後處理 */
-const onEditSuccess = () => {
+/** 處理【編輯】成功 */
+const handleEditSuccess = () => {
   ElMessage.success('已更新商品')
   showEditDialog.value = false
   getGoodsListReq({}, false)
 }
-
 
 // ---------------------------------------------------------------------------------
 onMounted(async () => {
