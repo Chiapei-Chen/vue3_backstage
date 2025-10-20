@@ -33,14 +33,14 @@ export function useGoodsList() {
   /** 換頁事件 */
   const handlePageChange = (page) => {
     pagination.value.currentPage = page;
-    getGoodsListRequest(searchFilter.value, false);
+    getGoodsListReq(searchFilter.value, false);
   };
 
   /** 切換每頁筆數事件 */
   const handlePageSizeChange = (size) => {
     pagination.value.pageSize = size;
     pagination.value.currentPage = 1; // 重設回第一頁
-    getGoodsListRequest(searchFilter.value, false);
+    getGoodsListReq(searchFilter.value, false);
   };
 
   /** 新增與編輯商品用的表單 */
@@ -77,7 +77,7 @@ export function useGoodsList() {
   }
 
   /** 獲取【商品列表】 */
-  const getGoodsListRequest = async (postData, useLastSearchForm = false) => {
+  const getGoodsListReq = async (postData, useLastSearchForm = false) => {
     tableLoading.value = true;
     postData ? (searchForm.value = { ...postData }) : searchForm.value;
 
@@ -116,7 +116,7 @@ export function useGoodsList() {
     pagination,
     handlePageChange,
     handlePageSizeChange,
-    getGoodsListRequest,
+    getGoodsListReq,
     getGoodsTypeList,
     getGoodsTypeName
   };
