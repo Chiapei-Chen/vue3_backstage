@@ -36,6 +36,10 @@
     </el-table>
   </div>
   <!-- 新增商品&編輯商品 Dialog -->
+  <GoodsAddModal v-model:visible="showAddDialog" :goodsTypeList="goodsTypeList" @confirm="handleAddConfirm" />
+
+  <GoodsEditModal v-model:visible="showEditDialog" :editData="editForm" :goodsTypeList="goodsTypeList"
+    @confirm="handleEditConfirm" />
   <CreateEditGoods v-model="dialog.goodsDialogVisible" v-model:formModel="goodsForm" :isEdit="dialog.IsEditMode"
     @confirm="clickSave" @close="clickResetDialog" :goodsTypeList="goodsTypeList" />
 </template>
@@ -43,7 +47,8 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue';
 import { useGoodsList } from './composables';
-import CreateEditGoods from './components/dialog/CreateEditGoods.vue';
+import GoodsAddModal from './components/GoodsAddModal.vue';
+import GoodsEditModal from './components/GoodsAddModal.vue';
 import { addGoods, updateGoods } from '@/service/api';
 import { ElMessage } from 'element-plus';
 
