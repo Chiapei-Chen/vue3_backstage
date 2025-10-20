@@ -87,7 +87,7 @@ const editForm = ref({})
 
 /** 點擊開啟【編輯】彈跳視窗 */
 const clickOpenEditModal = (row) => {
-  editForm.value = JSON.parse(JSON.stringify(row))
+  editForm.value = JSON.parse(JSON.stringify(row));
   showEditModal.value = true
 }
 

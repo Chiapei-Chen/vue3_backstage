@@ -7,7 +7,7 @@
       </div>
       <el-button type="warning" icon="Search" @click="getGoodsTypeList">搜尋</el-button>
     </div>
-    <el-button class="btn--create" plain icon="Plus" @click="showAddDialog = true">
+    <el-button class="btn--create" plain icon="Plus" @click="showAddModal = true">
       新增分類
     </el-button>
   </div>
