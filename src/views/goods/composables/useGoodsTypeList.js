@@ -30,8 +30,8 @@ export function useGoodsTypeList() {
     Name: ''
   });
 
-  //獲取商品分類列表
-  const getGoodsTypeTableList = async () => {
+  /** 取得【商品分類】列表 */
+  const getGoodsTypeList = async () => {
     tableLoading.value = true;
     const [err, res] = await to(getGoodsType({}));
     tableLoading.value = false;
@@ -55,6 +55,6 @@ export function useGoodsTypeList() {
     // 編輯表單
     goodsTypeForm,
     // 取得列表函式
-    getGoodsTypeTableList,
+    getGoodsTypeList,
   };
 }

@@ -67,7 +67,7 @@
 
     <template #footer>
       <el-button @click="emit('close')">取消</el-button>
-      <el-button type="success" @click="clickSubmit">新增</el-button>
+      <el-button type="success" @click="clickSubmit">新增送出</el-button>
     </template>
   </el-dialog>
 </template>
@@ -82,7 +82,6 @@ const props = defineProps({
   width: { type: [String, Number], default: 500 },
   goodsTypeList: { type: Array, default: () => [] }
 })
-
 const emit = defineEmits(['close', 'confirm'])
 const dialogVisible = defineModel('visible', { default: false })
 
@@ -97,7 +96,7 @@ const clickSubmit = async () => {
         const res = await addGoods(formModel.value)
         if (res.data.Code === 200) {
           ElMessage.success('新增成功')
-          emit('confirm') // ✅ 通知父元件成功
+          emit('confirm') 
           dialogVisible.value = false
         } else {
           ElMessage.error(res.data.Message || '新增失敗')
