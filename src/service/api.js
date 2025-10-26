@@ -1,4 +1,5 @@
 import { request } from '@/service/request';
+import exp from 'constants';
 
 /* 取得登入OTP碼 */
 export const getOtp = data =>
@@ -182,3 +183,38 @@ export const updateAdminPermissions = data =>
     headers: { 'Content-Type': 'application/json' },
     data
   });
+
+/** orders */
+export const getOrderList = data =>
+  request({
+    url: '/admin/order/r',
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    data
+  });
+
+export const updateOrder = data =>
+  request({
+    url: '/admin/order/u',
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    data
+  });
+
+export const removeOrder = data =>
+  request({
+    url: '/admin/order/d',
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    data
+  });
+
+export const getOrderDetail = data =>
+  request({
+    url: '/admin/order/detail/r',
+    method: 'post',
+    headers: { 'Content-Type': 'application/json' },
+    data
+  });
+
+  
